@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 const ToastContext = createContext(null);
 
@@ -8,15 +8,21 @@ export function ToastProvider({ children }) {
 
   const dismiss = useCallback((id) => setToasts((list) => list.filter((t) => t.id !== id)), []);
 
-  const show = useCallback(
-    (message, type = 'success', duration = 3500) => {
-      counter.current += 1;
-      const id = counter.current;
-      setToasts((list) => [...list.slice(-3), { id, message, type }]);
-      window.setTimeout(() => dismiss(id), duration);
-    },
-    [dismiss],
-  );
+  const show = useCallback((message, type = 'success', duration = 3500) => {
+    counter.current += 1;
+    const id = counter.current;
+    setToasts((list) => [...list.slice(-3), { id, message, type, expiresAt: Date.now() + duration }]);
+  }, []);
+
+  useEffect(() => {
+    if (toasts.length === 0) return undefined;
+    const soonest = Math.min(...toasts.map((t) => t.expiresAt));
+    const id = window.setTimeout(() => {
+      const now = Date.now();
+      setToasts((list) => list.filter((t) => t.expiresAt > now));
+    }, Math.max(0, soonest - Date.now()));
+    return () => window.clearTimeout(id);
+  }, [toasts]);
 
   const value = useMemo(() => ({ show, dismiss }), [show, dismiss]);
 

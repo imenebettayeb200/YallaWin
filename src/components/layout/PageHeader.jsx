@@ -1,10 +1,15 @@
 import { Link, useNavigate } from 'react-router-dom';
 import Icon from '../common/Icon.jsx';
 import NotificationsBell from './NotificationsBell.jsx';
+import usePageTitle from '../../hooks/usePageTitle.js';
 
-/** Title + subtitle on the left; search, bell, custom actions and "Create event" on the right. */
-export default function PageHeader({ title, subtitle, children, showCreate = false, showSearch = true }) {
+/**
+ * Title + subtitle on the left; search, bell, custom actions and "Create event" on the right.
+ * Also sets the browser tab title (pageTitle if given, otherwise title).
+ */
+export default function PageHeader({ title, subtitle, pageTitle, children, showCreate = false, showSearch = true }) {
   const navigate = useNavigate();
+  usePageTitle(pageTitle || title);
   return (
     <header className="page-header">
       <div>

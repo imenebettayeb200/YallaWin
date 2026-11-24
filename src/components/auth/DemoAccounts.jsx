@@ -1,4 +1,4 @@
-import { DEMO_ACCOUNTS } from '../../data/seed.js';
+import { DEMO_ACCOUNTS } from '../../data/data.js';
 
 /** Buttons that fill the login form with a demo account. */
 export default function DemoAccounts({ onPick, showAttendee = true }) {

@@ -2,14 +2,14 @@ import EventGrid from './EventGrid.jsx';
 import AttendedItem from './AttendedItem.jsx';
 
 /** "Saved" events (hearts) + "Attended" events with reviews. */
-export default function MyEventsSection({ savedEvents, saved, attended, myReviews, onToggleSave, onOpen, onReview }) {
+export default function MyEventsSection({ savedEvents, saved, attended, myReviews, onToggleSave, onOpen, onReview, now }) {
   return (
     <section className="all-events">
       <h2>Saved</h2>
       {savedEvents.length === 0 ? (
         <p className="muted">Tap the heart on any event to save it here.</p>
       ) : (
-        <EventGrid events={savedEvents} saved={saved} onToggleSave={onToggleSave} onOpen={onOpen} />
+        <EventGrid events={savedEvents} saved={saved} onToggleSave={onToggleSave} onOpen={onOpen} now={now} />
       )}
 
       <h2 className="spaced-top">Attended</h2>

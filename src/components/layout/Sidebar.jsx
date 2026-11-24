@@ -3,15 +3,17 @@ import Icon from '../common/Icon.jsx';
 import Logo from '../common/Logo.jsx';
 import SidebarAccount from './SidebarAccount.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { ORG_NAV } from '../../data/data.js';
 
-const NAV = [
-  { to: '/org', label: 'Overview', icon: 'overview', match: (p) => p === '/org' || p === '/org/' },
-  { to: '/org/events', label: 'Events', icon: 'calendar', match: (p) => p.startsWith('/org/events') && !p.startsWith('/org/events/new') },
-  { to: '/org/events/new', label: 'Create event', icon: 'plus', match: (p) => p.startsWith('/org/events/new') },
-  { to: '/org/reviews', label: 'Reviews', icon: 'star', match: (p) => p.startsWith('/org/reviews') },
-  { to: '/org/payouts', label: 'Payouts', icon: 'payouts', match: (p) => p.startsWith('/org/payouts') },
-  { to: '/org/settings', label: 'Settings', icon: 'sliders', match: (p) => p.startsWith('/org/settings') },
-];
+/**
+ * Sidebar — left menu of the organization dashboard.
+ * The menu items come from ORG_NAV in data.js. The active item is the one whose
+ * link matches the current URL best (longest match), e.g. /org/events/new -> "Create event".
+ */
+function activeLink(pathname) {
+  const matches = ORG_NAV.filter((item) => pathname === item.to || pathname.startsWith(`${item.to}/`));
+  return matches.reduce((best, item) => (!best || item.to.length > best.to.length ? item : best), null);
+}
 
 function NavItem({ item, active }) {
   return (
@@ -26,6 +28,7 @@ export default function Sidebar() {
   const { pathname } = useLocation();
   const { organization, logout } = useAuth();
   const navigate = useNavigate();
+  const active = activeLink(pathname);
 
   const handleLogout = () => {
     logout();
@@ -39,8 +42,8 @@ export default function Sidebar() {
       </Link>
 
       <nav className="sidebar-nav" aria-label="Organization">
-        {NAV.map((item) => (
-          <NavItem key={item.to} item={item} active={item.match(pathname)} />
+        {ORG_NAV.map((item) => (
+          <NavItem key={item.to} item={item} active={active === item} />
         ))}
       </nav>
 

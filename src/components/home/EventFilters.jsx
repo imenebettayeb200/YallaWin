@@ -1,21 +1,5 @@
 import Dropdown from '../common/Dropdown.jsx';
-
-export const CATEGORY_FILTERS = [
-  { key: 'all', label: 'All' },
-  { key: 'Music', label: 'Music' },
-  { key: 'Nightlife', label: 'Night Life' },
-  { key: 'Sports', label: 'Sports' },
-  { key: 'Adventure', label: 'Adventure' },
-  { key: 'Tech', label: 'Tech' },
-  { key: 'Workshop', label: 'Workshop' },
-];
-
-export const SORTS = [
-  { key: 'soon', label: 'Soonest' },
-  { key: 'popular', label: 'Most popular' },
-  { key: 'price-asc', label: 'Price: low to high' },
-  { key: 'price-desc', label: 'Price: high to low' },
-];
+import { CATEGORY_FILTERS, SORT_OPTIONS } from '../../data/data.js';
 
 /** Category chips on the left; Free toggle, City and Sort on the right. */
 export default function EventFilters({ filters, onChange, cities }) {
@@ -34,7 +18,7 @@ export default function EventFilters({ filters, onChange, cities }) {
           Free <span className="switch" />
         </button>
         <Dropdown label="City" value={filters.city} options={cities} onChange={set('city')} />
-        <Dropdown label="Sort" value={filters.sort} options={SORTS} onChange={set('sort')} icon="sliders" />
+        <Dropdown label="Sort" value={filters.sort} options={SORT_OPTIONS} onChange={set('sort')} icon="sliders" />
       </div>
     </div>
   );

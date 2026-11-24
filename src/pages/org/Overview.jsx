@@ -23,6 +23,7 @@ export default function Overview() {
     <div className="page">
       <PageHeader
         title={`${greeting(now)}, ${organization.name}`}
+        pageTitle="Overview"
         subtitle={`${formatLongToday(now)} · Here's how your events are doing.`}
         showCreate
       />

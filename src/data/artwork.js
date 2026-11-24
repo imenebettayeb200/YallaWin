@@ -2,14 +2,9 @@
  * Generates lightweight SVG cover artwork (as data URLs) per category.
  * Used for seeded events and the "Generate a cover" button.
  */
-export const CATEGORY_THEMES = {
-  Nightlife: { from: '#3a1410', to: '#c2562c', accent: '#ffb36b', emoji: '🪩' },
-  Music: { from: '#f6e3c3', to: '#e7652c', accent: '#1d1d1d', emoji: '🎷' },
-  Tech: { from: '#c9a6f2', to: '#7d4fd1', accent: '#f4e9ff', emoji: '🤖' },
-  Sports: { from: '#8fd3f5', to: '#2f7fc1', accent: '#ffe7a3', emoji: '🏐' },
-  Workshop: { from: '#d7b899', to: '#7a5238', accent: '#fff3e3', emoji: '🏺' },
-  Adventure: { from: '#7fc28d', to: '#2b5f3a', accent: '#e9ffe9', emoji: '⛰️' },
-};
+import { CATEGORY_THEMES } from './data.js';
+
+export { CATEGORY_THEMES };
 
 export function themeFor(category) {
   return CATEGORY_THEMES[category] || CATEGORY_THEMES.Workshop;

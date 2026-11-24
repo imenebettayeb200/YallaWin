@@ -87,14 +87,12 @@
 import { uid } from '../utils/ids.js';
 import { hashPassword, randomHex } from '../utils/crypto.js';
 import { combineDateTime, addDays } from '../utils/dates.js';
+import { CATEGORIES, PLATFORM_FEE_RATE, REVIEW_TAGS } from '../data/data.js';
 
 export const ROLES = Object.freeze({ USER: 'user', ORG: 'org' });
-export const CATEGORIES = ['Workshop', 'Music', 'Nightlife', 'Sports', 'Tech', 'Adventure'];
-export const PLATFORM_FEE_RATE = 0.05;
 
-export const REVIEW_TAGS = [
-  'Great music', 'Smooth entry', 'Venue', 'Good value', 'Well organized', 'Crowded bar', 'Parking',
-];
+// Categories, review tags and the platform fee are data: they live in src/data/data.js
+export { CATEGORIES, PLATFORM_FEE_RATE, REVIEW_TAGS };
 
 /* ----------------------------- validation ----------------------------- */
 

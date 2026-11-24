@@ -79,7 +79,7 @@ export default function TwoStepVerification() {
 
   return (
     <AuthLayout>
-      <AuthCard className="auth-card-2fa" onSubmit={handleSubmit}>
+      <AuthCard className="auth-card-2fa" pageTitle="Two-step verification" onSubmit={handleSubmit}>
         <span className="shield-badge">
           <Icon name="shield" size={18} />
         </span>

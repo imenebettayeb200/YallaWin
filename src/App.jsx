@@ -1,6 +1,8 @@
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import DashboardLayout from './components/layout/DashboardLayout.jsx';
 import RequireAuth from './components/layout/RequireAuth.jsx';
+import ScrollToTop from './components/layout/ScrollToTop.jsx';
+import usePageTitle from './hooks/usePageTitle.js';
 import { ROLES } from './models/index.js';
 import ForgotPassword from './pages/auth/ForgotPassword.jsx';
 import Login from './pages/auth/Login.jsx';
@@ -15,6 +17,7 @@ import Settings from './pages/org/Settings.jsx';
 import Home from './pages/home/Home.jsx';
 
 function NotFound() {
+  usePageTitle('Page not found');
   return (
     <div className="fatal-state">
       <h1>Page not found</h1>
@@ -26,40 +29,49 @@ function NotFound() {
   );
 }
 
+/**
+ * App — all the routes of YallaWin.
+ *   /                    public home page
+ *   /login … /verify     authentication
+ *   /org/…               organization dashboard (needs an organization account)
+ */
 export default function App() {
   return (
-    <Routes>
-      {/* Public home page (works signed in or out) */}
-      <Route path="/" element={<Home />} />
-      <Route path="/app" element={<Navigate to="/" replace />} />
+    <>
+      <ScrollToTop />
+      <Routes>
+        {/* Public home page (works signed in or out) */}
+        <Route path="/" element={<Home />} />
+        <Route path="/app" element={<Navigate to="/" replace />} />
 
-      {/* Authentication */}
-      <Route path="/login" element={<Login mode="user" />} />
-      <Route path="/login/organization" element={<Login mode="org" />} />
-      <Route path="/register" element={<Register mode="user" />} />
-      <Route path="/register/organization" element={<Register mode="org" />} />
-      <Route path="/verify" element={<TwoStepVerification />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
+        {/* Authentication */}
+        <Route path="/login" element={<Login mode="user" />} />
+        <Route path="/login/organization" element={<Login mode="org" />} />
+        <Route path="/register" element={<Register mode="user" />} />
+        <Route path="/register/organization" element={<Register mode="org" />} />
+        <Route path="/verify" element={<TwoStepVerification />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
-      {/* Organization dashboard (requires an organization sign-in) */}
-      <Route
-        path="/org"
-        element={
-          <RequireAuth role={ROLES.ORG}>
-            <DashboardLayout />
-          </RequireAuth>
-        }
-      >
-        <Route index element={<Overview />} />
-        <Route path="events" element={<Events />} />
-        <Route path="events/new" element={<CreateEvent key="new" />} />
-        <Route path="events/:eventId" element={<EditEventRoute />} />
-        <Route path="reviews" element={<Reviews />} />
-        <Route path="payouts" element={<Payouts />} />
-        <Route path="settings" element={<Settings />} />
-      </Route>
+        {/* Organization dashboard (requires an organization sign-in) */}
+        <Route
+          path="/org"
+          element={
+            <RequireAuth role={ROLES.ORG}>
+              <DashboardLayout />
+            </RequireAuth>
+          }
+        >
+          <Route index element={<Overview />} />
+          <Route path="events" element={<Events />} />
+          <Route path="events/new" element={<CreateEvent key="new" />} />
+          <Route path="events/:eventId" element={<EditEventRoute />} />
+          <Route path="reviews" element={<Reviews />} />
+          <Route path="payouts" element={<Payouts />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
 
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
   );
 }

@@ -1,5 +1,17 @@
 # YallaWin — Events management (React + Vite)
 
+## Course files
+| File | What it is |
+|---|---|
+| [Agent.md](Agent.md) | How to work in this project |
+| [IDEA.md](IDEA.md) | The product idea |
+| [RULES.md](RULES.md) | Code, product, and design rules |
+| [docs/COMPONENTS.md](docs/COMPONENTS.md) | What each React component does |
+| [src/data/data.js](src/data/data.js) | Every static list and label |
+| [.cursor/skills/taste/SKILL.md](.cursor/skills/taste/SKILL.md) | Visual taste for the UI |
+
+Pages are wired with React Router in `src/App.jsx`. Screens use `useState` and `useEffect` (search, clock, toasts, session, database updates).
+
 ## Run it
 ```bash
 npm install

@@ -4,12 +4,9 @@ import Logo from '../common/Logo.jsx';
 import SearchInput from '../common/SearchInput.jsx';
 import UserMenu from './UserMenu.jsx';
 import { ROLES } from '../../models/index.js';
+import { HOME_TABS } from '../../data/data.js';
 
-export const HOME_TABS = [
-  { key: 'home', label: 'Home', icon: 'overview' },
-  { key: 'going', label: 'Going To', icon: 'ticketPlain' },
-  { key: 'mine', label: 'My Events', icon: 'sparkle' },
-];
+export { HOME_TABS };
 
 /** Top bar: logo · Home / Going To / My Events · search · account. */
 export default function HomeNav({ tab, onTabChange, search, onSearch, user, onLogout }) {

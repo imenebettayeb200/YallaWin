@@ -15,15 +15,15 @@ const SORTERS = {
 };
 
 /** Data for the public home page: top picks, filtered list, cities, and the user's tickets. */
-export default function useHomeEvents({ search, category, freeOnly, city, sort, userId }) {
+export default function useHomeEvents({ search, category, freeOnly, city, sort, userId, now = new Date() }) {
   const state = useDbState();
+  const tick = now.getTime();
 
   const orgNames = useMemo(() => Object.fromEntries(state.organizations.map((o) => [o.id, o.name])), [state.organizations]);
 
   const upcoming = useMemo(() => {
-    const now = new Date();
     return state.events.filter((e) => e.status === 'published' && isUpcoming(e, now));
-  }, [state.events]);
+  }, [state.events, tick]);
 
   const topPicks = useMemo(
     () =>
@@ -76,5 +76,5 @@ export default function useHomeEvents({ search, category, freeOnly, city, sort, 
     return map;
   }, [state.reviews, userId]);
 
-  return { orgNames, topPicks, cities, filtered, tickets, myReviews, allEvents: state.events };
+  return { orgNames, topPicks, cities, filtered, tickets, myReviews, onSaleCount: upcoming.length, allEvents: state.events };
 }

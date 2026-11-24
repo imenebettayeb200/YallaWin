@@ -5,9 +5,10 @@ import { coverStyle } from '../common/EventThumb.jsx';
 import TierOptions from './TierOptions.jsx';
 import QuantityPicker from './QuantityPicker.jsx';
 import { useToast } from '../../context/ToastContext.jsx';
-import { eventStatus, ROLES, STATUS_LABELS } from '../../models/index.js';
+import { eventStart, eventStatus, ROLES, STATUS_LABELS } from '../../models/index.js';
 import { buyTicket } from '../../services/eventService.js';
-import { formatShortDate, formatTimeLong, formatTND } from '../../utils/format.js';
+import { formatCountdown, formatShortDate, formatTimeLong, formatTND } from '../../utils/format.js';
+import useNow from '../../hooks/useNow.js';
 
 function MetaLine({ icon, children }) {
   return (
@@ -21,7 +22,9 @@ function MetaLine({ icon, children }) {
 export default function EventModal({ event, orgName, user, onClose }) {
   const toast = useToast();
   const navigate = useNavigate();
-  const status = eventStatus(event);
+  const now = useNow();
+  const status = eventStatus(event, now);
+  const countdown = status === 'ended' || status === 'draft' ? '' : formatCountdown(eventStart(event), now);
   const onSale = status !== 'ended' && status !== 'draft';
   const firstAvailable = event.tiers.find((t) => t.quantity - t.sold > 0);
   const [tierId, setTierId] = useState(firstAvailable ? firstAvailable.id : '');
@@ -78,6 +81,7 @@ export default function EventModal({ event, orgName, user, onClose }) {
           <h2 className="modal-title">{event.title}</h2>
           <MetaLine icon="calendar">
             {formatShortDate(event.date, true)} · {formatTimeLong(event.startTime)} – {formatTimeLong(event.endTime)}
+            {countdown ? ` · ${countdown}` : ''}
           </MetaLine>
           <MetaLine icon="pin">{event.venue}</MetaLine>
           <MetaLine icon="user">Hosted by {orgName}</MetaLine>

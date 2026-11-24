@@ -63,6 +63,20 @@ export function ordinal(n) {
   return `${n}${s[(v - 20) % 10] || s[v] || s[0]}`;
 }
 
+/** "in 3 days", "in 4h", "in 12 min", or "Happening now". */
+export function formatCountdown(target, now = new Date()) {
+  if (!target) return '';
+  const diff = target.getTime() - now.getTime();
+  if (diff <= 0) return 'Happening now';
+  const minutes = Math.floor(diff / 60000);
+  if (minutes < 60) return minutes <= 1 ? 'in 1 min' : `in ${minutes} min`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `in ${hours}h`;
+  const days = Math.floor(hours / 24);
+  if (days === 1) return 'Tomorrow';
+  return `in ${days} days`;
+}
+
 export function timeAgo(isoString, now = Date.now()) {
   const seconds = Math.max(0, Math.floor((now - new Date(isoString).getTime()) / 1000));
   if (seconds < 60) return 'just now';

@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { db } from '../data/db.js';
 import { useDbState } from '../data/useDb.js';
 import { hashPassword, randomCode, randomHex } from '../utils/crypto.js';
@@ -79,6 +79,21 @@ export function AuthProvider({ children }) {
   const dbState = useDbState();
   const [session, setSession] = useState(readSession);
   const [pending, setPending] = useState(readPending);
+
+  useEffect(() => {
+    if (!session) return undefined;
+    const wait = session.expiresAt - Date.now();
+    if (wait <= 0) {
+      clearStoredSession();
+      setSession(null);
+      return undefined;
+    }
+    const id = window.setTimeout(() => {
+      clearStoredSession();
+      setSession(null);
+    }, wait);
+    return () => window.clearTimeout(id);
+  }, [session]);
 
   const user = useMemo(
     () => (session ? dbState.users.find((u) => u.id === session.userId) || null : null),

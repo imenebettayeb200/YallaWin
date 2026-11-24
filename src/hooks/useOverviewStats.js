@@ -6,11 +6,11 @@ import { MONTHS, MONTHS_LONG, percentChange } from '../utils/format.js';
 import { dailyTotals, sumValues } from '../utils/stats.js';
 
 /** Everything the Overview page shows, computed from the database. */
-export default function useOverviewStats(orgId) {
+export default function useOverviewStats(orgId, now = new Date()) {
   const state = useDbState();
+  const tick = now.getTime();
 
   return useMemo(() => {
-    const now = new Date();
     const events = state.events.filter((e) => e.orgId === orgId);
     const sales = state.sales.filter((s) => s.orgId === orgId);
     const reviews = state.reviews.filter((r) => r.orgId === orgId);
@@ -56,5 +56,5 @@ export default function useOverviewStats(orgId) {
         reviewCount: reviews.length,
       },
     };
-  }, [state, orgId]);
+  }, [state, orgId, tick]);
 }

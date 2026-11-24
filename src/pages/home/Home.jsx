@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import HomeBackground from '../../components/home/HomeBackground.jsx';
 import HomeNav, { HOME_TABS } from '../../components/home/HomeNav.jsx';
@@ -13,9 +13,11 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import { useToast } from '../../context/ToastContext.jsx';
 import { db } from '../../data/db.js';
 import useHomeEvents from '../../hooks/useHomeEvents.js';
+import useDebounce from '../../hooks/useDebounce.js';
+import useLocalStorageState from '../../hooks/useLocalStorageState.js';
+import usePageTitle from '../../hooks/usePageTitle.js';
+import { DEFAULT_HOME_FILTERS } from '../../data/data.js';
 import { addReview } from '../../services/eventService.js';
-
-const DEFAULT_FILTERS = { category: 'all', freeOnly: false, city: 'all', sort: 'soon' };
 
 export default function Home() {
   const { user, logout } = useAuth();
@@ -25,11 +27,21 @@ export default function Home() {
   const tab = HOME_TABS.some((t) => t.key === params.get('tab')) ? params.get('tab') : 'home';
 
   const [search, setSearch] = useState('');
-  const [filters, setFilters] = useState(DEFAULT_FILTERS);
+  const debouncedSearch = useDebounce(search, 250); // filter after the user pauses typing
+  const [filters, setFilters] = useLocalStorageState('yw_home_filters', DEFAULT_HOME_FILTERS); // remembered after refresh
   const [openEventId, setOpenEventId] = useState(null);
 
   const userId = user ? user.id : null;
-  const { orgNames, topPicks, cities, filtered, tickets, myReviews, allEvents } = useHomeEvents({ ...filters, search, userId });
+  const { orgNames, topPicks, cities, filtered, tickets, myReviews, allEvents } = useHomeEvents({ ...filters, search: debouncedSearch, userId });
+
+  usePageTitle(tab === 'going' ? 'Going to' : tab === 'mine' ? 'My events' : 'Discover events');
+
+  // If a remembered city no longer has events, go back to "All cities".
+  useEffect(() => {
+    if (filters.city !== 'all' && !cities.some((c) => c.key === filters.city)) {
+      setFilters((f) => ({ ...f, city: 'all' }));
+    }
+  }, [cities, filters.city, setFilters]);
 
   const favorites = user ? user.favorites : null;
   const saved = useMemo(() => new Set(favorites || []), [favorites]);

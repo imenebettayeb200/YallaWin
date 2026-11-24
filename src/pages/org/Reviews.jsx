@@ -12,21 +12,17 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import { useToast } from '../../context/ToastContext.jsx';
 import useReviewStats from '../../hooks/useReviewStats.js';
 import { eventDisplayName } from '../../models/index.js';
+import { REVIEW_TABS } from '../../data/data.js';
 import { replyToReview } from '../../services/eventService.js';
 
 const PAGE = 10;
-const TABS = [
-  { key: 'all', label: 'All' },
-  { key: 'needs-reply', label: 'Needs reply' },
-  { key: 'low', label: 'Low ratings' },
-];
 
 export default function Reviews() {
   const { organization } = useAuth();
   const toast = useToast();
   const stats = useReviewStats(organization.id);
   const [params, setParams] = useSearchParams();
-  const tab = TABS.some((t) => t.key === params.get('tab')) ? params.get('tab') : 'all';
+  const tab = REVIEW_TABS.some((t) => t.key === params.get('tab')) ? params.get('tab') : 'all';
   const [eventFilter, setEventFilter] = useState('all');
   const [limit, setLimit] = useState(PAGE);
 
@@ -69,7 +65,7 @@ export default function Reviews() {
       )}
 
       <div className="toolbar">
-        <PillTabs tabs={TABS} value={tab} counts={stats.counts} onChange={changeFilter((key) => setParams(key === 'all' ? {} : { tab: key }, { replace: true }))} />
+        <PillTabs tabs={REVIEW_TABS} value={tab} counts={stats.counts} onChange={changeFilter((key) => setParams(key === 'all' ? {} : { tab: key }, { replace: true }))} />
         <EventSelect value={eventFilter} options={stats.reviewedEvents} onChange={changeFilter(setEventFilter)} />
       </div>
 

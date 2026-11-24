@@ -1,13 +1,9 @@
 import { useMemo } from 'react';
 import { useDbState } from '../data/useDb.js';
 import { eventStart, eventStatus } from '../models/index.js';
+import { EVENT_TABS } from '../data/data.js';
 
-export const EVENT_TABS = [
-  { key: 'all', label: 'All' },
-  { key: 'upcoming', label: 'Upcoming' },
-  { key: 'drafts', label: 'Drafts' },
-  { key: 'past', label: 'Past' },
-];
+export { EVENT_TABS };
 
 function tabOf(event, now) {
   const s = eventStatus(event, now);
