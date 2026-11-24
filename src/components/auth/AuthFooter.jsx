@@ -1,19 +1,19 @@
-import { Link } from 'react-router-dom';
-import Icon from '../common/Icon.jsx';
+import { Link } from "react-router-dom";
+import Icon from "../common/Icon";
 
-/** "New to YallaWin? Create account" + divider + the organization / attendee switch. */
-export default function AuthFooter({ question, linkText, linkTo, switchText, switchLinkText, switchTo, externalIcon = false }) {
+/* AuthFooter — "New to YallaWin? Create account" + the switch between attendee and organization. */
+function AuthFooter({ question, linkText, linkTo, switchText, switchLinkText, switchTo }) {
   return (
     <>
       <p className="auth-switch">
-        {question}{' '}
+        {question}{" "}
         <Link to={linkTo} className="link-blue">
-          {linkText} {externalIcon && <Icon name="external" size={11} />}
+          {linkText} <Icon name="external" size={11}></Icon>
         </Link>
       </p>
-      <div className="auth-divider" />
+      <div className="auth-divider"></div>
       <p className="auth-footer">
-        {switchText}{' '}
+        {switchText}{" "}
         <Link to={switchTo} className="link-underline">
           {switchLinkText}
         </Link>
@@ -21,3 +21,5 @@ export default function AuthFooter({ question, linkText, linkTo, switchText, swi
     </>
   );
 }
+
+export default AuthFooter;

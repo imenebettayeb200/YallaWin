@@ -1,23 +1,25 @@
-import { Link } from 'react-router-dom';
-import Logo from '../common/Logo.jsx';
+import { Link } from "react-router-dom";
+import Logo from "../common/Logo";
 
-/** Dark page with coloured blurred blobs and the serif logo (login / 2-step screens). */
-export default function AuthLayout({ children }) {
+/* AuthLayout — dark page with coloured blobs and the logo, used by the attendee sign-in screens. */
+function AuthLayout({ children }) {
   return (
     <div className="auth-page">
       <div className="auth-blobs" aria-hidden="true">
-        <span className="blob blob-purple" />
-        <span className="blob blob-magenta" />
-        <span className="blob blob-red" />
-        <span className="blob blob-orange" />
-        <span className="blob blob-blue" />
+        <span className="blob blob-purple"></span>
+        <span className="blob blob-magenta"></span>
+        <span className="blob blob-red"></span>
+        <span className="blob blob-orange"></span>
+        <span className="blob blob-blue"></span>
       </div>
       <main className="auth-content">
         <Link to="/" className="auth-logo" aria-label="YallaWin home">
-          <Logo />
+          <Logo></Logo>
         </Link>
         {children}
       </main>
     </div>
   );
 }
+
+export default AuthLayout;

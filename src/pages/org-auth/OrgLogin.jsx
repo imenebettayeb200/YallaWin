@@ -1,45 +1,40 @@
-import { useState } from 'react';
-import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
-import OrgAuthLayout from '../../components/org-auth/OrgAuthLayout.jsx';
-import AuthCard from '../../components/auth/AuthCard.jsx';
-import TextField from '../../components/auth/TextField.jsx';
-import PasswordField from '../../components/auth/PasswordField.jsx';
-import Checkbox from '../../components/auth/Checkbox.jsx';
-import SubmitButton from '../../components/auth/SubmitButton.jsx';
-import Icon from '../../components/common/Icon.jsx';
-import { destinationAfterLogin, homeFor, useAuth } from '../../context/AuthContext.jsx';
-import { DEMO_ACCOUNTS } from '../../data/data.js';
-import { ROLES } from '../../models/index.js';
+import { useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { demoAccounts } from "../../Data";
+import OrgAuthLayout from "../../components/layout/OrgAuthLayout";
+import AuthCard from "../../components/auth/AuthCard";
+import TextField from "../../components/auth/TextField";
+import PasswordField from "../../components/auth/PasswordField";
+import SubmitButton from "../../components/auth/SubmitButton";
+import Icon from "../../components/common/Icon";
 
-/** /login/organization — "Sign in with your OrganizationID". */
-export default function OrgLogin() {
-  const { user, startLogin } = useAuth();
+/* OrgLogin — /login/organization. "Sign in with your OrganizationID" (the admin email also works). */
+function OrgLogin({ user, onLogin }) {
   const navigate = useNavigate();
-  const location = useLocation();
-  const [organizationId, setOrganizationId] = useState((location.state && location.state.organizationId) || '');
-  const [password, setPassword] = useState('');
-  const [remember, setRemember] = useState(false);
-  const [error, setError] = useState('');
-  const [fieldErrors, setFieldErrors] = useState({});
+  const [organizationId, setOrganizationId] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({});
+  const [error, setError] = useState("");
 
-  if (user) return <Navigate to={homeFor(user)} replace />;
-  const from = location.state && location.state.from;
+  if (user) return <Navigate to={user.role === "org" ? "/org" : "/"} replace></Navigate>;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const errs = {};
-    if (!organizationId.trim()) errs.organizationId = 'Enter your OrganizationID.';
-    if (!password) errs.password = 'Enter your password.';
-    setFieldErrors(errs);
-    setError('');
-    if (Object.keys(errs).length) return;
-    try {
-      const result = startLogin({ email: organizationId, password, remember, expectRole: ROLES.ORG });
-      if (result.status === '2fa') navigate('/verify', { state: { from } });
-      else navigate(destinationAfterLogin(result.user, from), { replace: true });
-    } catch (err) {
-      setError(err.message);
-    }
+    const newErrors = {};
+    if (!organizationId.trim()) newErrors.organizationId = "Enter your OrganizationID.";
+    if (!password) newErrors.password = "Enter your password.";
+    setErrors(newErrors);
+    setError("");
+    if (Object.keys(newErrors).length > 0) return;
+
+    const problem = onLogin(organizationId, password, true);
+    if (problem) setError(problem);
+    else navigate("/verify");
+  };
+
+  const useDemo = () => {
+    setOrganizationId(demoAccounts.org.organizationId);
+    setPassword(demoAccounts.org.password);
   };
 
   return (
@@ -54,45 +49,43 @@ export default function OrgLogin() {
       >
         <TextField
           label="OrganizationID"
-          placeholder="Your OrganizationID"
+          placeholder="ORG-YOURNAME-1234"
           autoComplete="username"
           value={organizationId}
-          error={fieldErrors.organizationId}
+          error={errors.organizationId}
           onChange={(e) => setOrganizationId(e.target.value)}
-        />
-        <PasswordField placeholder="Enter your password" autoComplete="current-password" value={password} error={fieldErrors.password} onChange={(e) => setPassword(e.target.value)} />
-        <Checkbox label="Keep me signed in" checked={remember} onChange={setRemember} />
+        ></TextField>
+        <PasswordField
+          placeholder="Enter your password"
+          autoComplete="current-password"
+          value={password}
+          error={errors.password}
+          onChange={(e) => setPassword(e.target.value)}
+        ></PasswordField>
         <SubmitButton>Sign in</SubmitButton>
-
         <div className="org-links">
           <Link to="/forgot-password/organization" className="link-blue">
-            Forgot OrganizationID or password? <Icon name="external" size={11} />
+            Forgot OrganizationID or password? <Icon name="external" size={11}></Icon>
           </Link>
           <Link to="/register/organization" className="link-blue">
-            Apply to get Verified <Icon name="external" size={11} />
+            Apply to get Verified <Icon name="external" size={11}></Icon>
           </Link>
         </div>
-        <div className="auth-divider" />
+        <div className="auth-divider"></div>
         <p className="auth-footer">
-          Not an organization?{' '}
+          Not an organization?{" "}
           <Link to="/login" className="link-underline">
             Sign in as a user
           </Link>
         </p>
-
         <div className="demo-row">
-          <button
-            type="button"
-            className="demo-fill"
-            onClick={() => {
-              setOrganizationId(DEMO_ACCOUNTS.org.organizationId);
-              setPassword(DEMO_ACCOUNTS.org.password);
-            }}
-          >
-            Use demo organization ({DEMO_ACCOUNTS.org.organizationId})
+          <button type="button" className="demo-fill" onClick={useDemo}>
+            Use demo organization ({demoAccounts.org.organizationId})
           </button>
         </div>
       </AuthCard>
     </OrgAuthLayout>
   );
 }
+
+export default OrgLogin;

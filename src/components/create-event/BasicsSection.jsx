@@ -1,20 +1,13 @@
-import Panel from '../common/Panel.jsx';
-import CoverUpload from './CoverUpload.jsx';
-import IconField from './IconField.jsx';
-import CategoryChips from './CategoryChips.jsx';
-import { generateCover } from '../../data/artwork.js';
+import Panel from "../common/Panel";
+import CoverUpload from "./CoverUpload";
+import IconField from "./IconField";
+import CategoryChips from "./CategoryChips";
 
-export default function BasicsSection({ form, errors, update, readOnly, onError }) {
+function BasicsSection({ form, errors, update, readOnly, onError }) {
   return (
     <Panel className="form-panel">
       <h2 className="panel-title">Basics</h2>
-      <CoverUpload
-        value={form.coverImage}
-        disabled={readOnly}
-        onChange={(coverImage) => update({ coverImage })}
-        onGenerate={() => update({ coverImage: generateCover(form.category, form.title) })}
-        onError={onError}
-      />
+      <CoverUpload value={form.image} disabled={readOnly} onChange={(image) => update({ image })} onError={onError} />
       <IconField
         label="Event title"
         icon="pencil"
@@ -28,7 +21,7 @@ export default function BasicsSection({ form, errors, update, readOnly, onError 
       <label className="field">
         <span className="field-label">Description</span>
         <textarea
-          className={`input textarea ${errors.description ? 'input-error' : ''}`}
+          className={`input textarea ${errors.description ? "input-error" : ""}`}
           rows={3}
           maxLength={1000}
           placeholder="Tell people what to expect…"
@@ -40,3 +33,5 @@ export default function BasicsSection({ form, errors, update, readOnly, onError 
     </Panel>
   );
 }
+
+export default BasicsSection;

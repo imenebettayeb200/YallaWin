@@ -1,18 +1,18 @@
-import { DEMO_ACCOUNTS } from '../../data/data.js';
+import { demoAccounts } from "../../Data";
 
-/** Buttons that fill the login form with a demo account. */
-export default function DemoAccounts({ onPick, showAttendee = true }) {
+/* DemoAccounts — buttons that fill the sign-in form with a demo account. */
+function DemoAccounts({ onPick }) {
   return (
     <div className="demo-row">
       <span>Demo:</span>
-      <button type="button" className="demo-fill" onClick={() => onPick(DEMO_ACCOUNTS.org)}>
-        Organization (dashboard)
+      <button type="button" className="demo-fill" onClick={() => onPick(demoAccounts.user)}>
+        Attendee (Sarra)
       </button>
-      {showAttendee && (
-        <button type="button" className="demo-fill" onClick={() => onPick(DEMO_ACCOUNTS.user)}>
-          Attendee
-        </button>
-      )}
+      <button type="button" className="demo-fill" onClick={() => onPick(demoAccounts.org)}>
+        Organization
+      </button>
     </div>
   );
 }
+
+export default DemoAccounts;

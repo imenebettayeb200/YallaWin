@@ -1,10 +1,18 @@
-import Icon from './Icon.jsx';
+import Icon from "./Icon";
 
-export default function SearchInput({ value, onChange, placeholder = 'Search', inputRef = null, className = 'search-input' }) {
+/* SearchInput — text box with a magnifier icon. */
+function SearchInput({ value, onChange, placeholder, className }) {
   return (
-    <label className={className}>
-      <Icon name="search" size={15} />
-      <input ref={inputRef} type="search" placeholder={placeholder} value={value} onChange={(e) => onChange(e.target.value)} />
+    <label className={className || "search-input"}>
+      <Icon name="search" size={15}></Icon>
+      <input
+        type="search"
+        placeholder={placeholder || "Search"}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
     </label>
   );
 }
+
+export default SearchInput;

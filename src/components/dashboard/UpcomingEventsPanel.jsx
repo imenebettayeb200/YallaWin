@@ -1,17 +1,16 @@
-import { Link, useNavigate } from 'react-router-dom';
-import Icon from '../common/Icon.jsx';
-import Panel from '../common/Panel.jsx';
-import EmptyState from '../common/EmptyState.jsx';
-import EventTable from './EventTable.jsx';
+import { Link } from "react-router-dom";
+import Icon from "../common/Icon";
+import Panel from "../common/Panel";
+import EmptyState from "../common/EmptyState";
+import EventTable from "./EventTable";
 
-export default function UpcomingEventsPanel({ events, orgName, limit = 4 }) {
-  const navigate = useNavigate();
+function UpcomingEventsPanel({ events, orgName, limit = 4 }) {
   return (
     <Panel
       className="table-panel"
       title="Upcoming events"
       actions={
-        <Link to="/org/events?tab=upcoming" className="view-all">
+        <Link to="/org/events" className="view-all">
           View all <Icon name="chevronRight" size={14} />
         </Link>
       }
@@ -27,8 +26,10 @@ export default function UpcomingEventsPanel({ events, orgName, limit = 4 }) {
           }
         />
       ) : (
-        <EventTable events={events.slice(0, limit)} orgName={orgName} onOpen={(id) => navigate(`/org/events/${id}`)} />
+        <EventTable events={events.slice(0, limit)} orgName={orgName} linkPrefix="/org/events/" />
       )}
     </Panel>
   );
 }
+
+export default UpcomingEventsPanel;

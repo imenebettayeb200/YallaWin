@@ -1,12 +1,12 @@
-import { CATEGORIES } from '../../models/index.js';
+import { categories } from "../../Data";
 
-export default function CategoryChips({ value, onChange }) {
+function CategoryChips({ value, onChange }) {
   return (
     <div className="field">
       <span className="field-label">Category</span>
       <div className="chips">
-        {CATEGORIES.map((c) => (
-          <button key={c} type="button" className={`chip ${value === c ? 'active' : ''}`} onClick={() => onChange(c)}>
+        {categories.map((c) => (
+          <button key={c} type="button" className={`chip ${value === c ? "active" : ""}`} onClick={() => onChange(c)}>
             {c}
           </button>
         ))}
@@ -14,3 +14,5 @@ export default function CategoryChips({ value, onChange }) {
     </div>
   );
 }
+
+export default CategoryChips;

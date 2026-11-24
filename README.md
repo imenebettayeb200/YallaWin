@@ -4,13 +4,11 @@
 | File | What it is |
 |---|---|
 | [Agent.md](Agent.md) | How to work in this project |
-| [IDEA.md](IDEA.md) | The product idea |
-| [RULES.md](RULES.md) | Code, product, and design rules |
-| [docs/COMPONENTS.md](docs/COMPONENTS.md) | What each React component does |
-| [src/data/data.js](src/data/data.js) | Every static list and label |
-| [.cursor/skills/taste/SKILL.md](.cursor/skills/taste/SKILL.md) | Visual taste for the UI |
+| [COMPONENTS_GUIDE.md](COMPONENTS_GUIDE.md) | What each page and component does, the routes and the user journeys |
+| [src/Data.js](src/Data.js) | **All the data** (users, events, tickets, reviews...) and every list of options |
+| [src/App.jsx](src/App.jsx) | All the state (`useState`), the actions and the routes |
 
-Pages are wired with React Router in `src/App.jsx`. Screens use `useState` and `useEffect` (search, clock, toasts, session, database updates).
+Pages are wired with React Router in `src/App.jsx`. Only `useState` and `useEffect` are used; data goes down as props.
 
 ## Run it
 ```bash
@@ -21,84 +19,18 @@ npm run build      # production build in /dist
 
 ## How the app flows
 ```
-Home page (/)  ──►  Sign in (/login)  ──►  2-step code (/verify)  ──►  Dashboard (/org)
-  public              email + password      6-digit code                organizations
+Home (/) ─► Event (/event/:id) ─► Checkout (/checkout/:id/:qty) ─► Ticket (/ticket/:id) ─► Going To (/going)
+   │                                     ▲ sign in first if needed
+   └─► Sign in (/login) ─► 6-digit code (/verify) ─► Home (attendee) or Dashboard /org (organization)
 ```
-- **Home page** is public: anyone can browse events.
-- Clicking **Sign in** with an **organization** account opens the **dashboard**
-  (Overview, Events, Create event, Reviews, Payouts, Settings).
-- An **attendee** account goes back to the home page, where **Going To** and
-  **My Events** unlock and tickets can be bought.
-- Signing out returns you to the home page.
 
 ## Demo accounts
-| Role | Email | Password | Lands on |
+| Role | Email / ID | Password | Lands on |
 |---|---|---|---|
-| Organization | contact@follamour.tn | Follamour2026 | `/org` dashboard |
-| Attendee | sarra@example.com | Sarra2026 | `/` home page |
+| Attendee | sarra@example.com | Sarra2026 | `/` |
+| Attendee | ines@example.com | Ines2026 | `/` |
+| Organization | contact@follamour.tn or ORG-FOLLAMOUR-2041 | Follamour2026 | `/org` |
 
-The login page has a demo button for each account that fills in the email and password.
-**Two-step verification:** there is no email server in a frontend-only app,
-so the 6-digit code appears in a **"Demo inbox"** card (bottom-right).
+The 6-digit codes appear in a **Demo inbox** card (bottom right) because a frontend-only app has no email server.
 
-## Pages
-| Route | Page |
-|---|---|
-| `/login`, `/login/organization` | Sign in |
-| `/verify` | Two-step verification (6-digit code, resend, trust device 30 days) |
-| `/register`, `/register/organization` | Create account |
-| `/forgot-password` | Reset password by code |
-| `/` | Public home page: top picks, all events, filters (+ Going To / My Events when signed in) |
-| `/org` | Overview (KPIs, ticket-sales chart, revenue by event, upcoming) |
-| `/org/events` | Events list (All / Upcoming / Drafts / Past, search, pages) |
-| `/org/events/new`, `/org/events/:id` | Create / edit event with live preview |
-| `/org/reviews` | Reviews, rating stats, public replies |
-| `/org/payouts` | Balance, payout requests, history |
-| `/org/settings` | Profile, bank, verification, password, reset demo data |
-
-## Structure (component-based)
-Pages only **assemble components**. Logic lives in hooks and services, and UI lives in small components.
-```
-src/
-├── main.jsx                  entry (Router + Toast + Auth providers)
-├── App.jsx                   all routes
-├── pages/                    thin screens that assemble components
-│   ├── home/Home.jsx
-│   ├── auth/  Login · TwoStepVerification · Register · ForgotPassword
-│   └── org/   Overview · Events · CreateEvent · Reviews · Payouts · Settings
-├── components/
-│   ├── common/        Icon, Logo, Avatar, Stars, StarPicker, StatusBadge, ProgressBar,
-│   │                  EmptyState, Delta, EventThumb, Panel, PillTabs, SearchInput,
-│   │                  Pagination, Dropdown
-│   ├── layout/        AuthLayout, DashboardLayout, Sidebar, SidebarAccount,
-│   │                  PageHeader, NotificationsBell, RequireAuth
-│   ├── auth/          AuthCard, TextField, PasswordField, Checkbox, OtpInput,
-│   │                  SubmitButton, AuthFooter, BackLink, DemoAccounts, DemoInbox
-│   ├── dashboard/     KpiCard, KpiGrid, RangeToggle, BarChart, TicketSalesChart,
-│   │                  RevenueByEvent, EventRow, EventTable, UpcomingEventsPanel
-│   ├── create-event/  CoverUpload, IconField, CategoryChips, BasicsSection,
-│   │                  WhenWhereSection, TicketTierRow, TicketTiersSection,
-│   │                  EventPreviewCard, PublishChecklist, EventFormActions
-│   ├── reviews/       RatingSummary, MentionsPanel, EventRatingCard, EventSelect,
-│   │                  ReviewCard, ReplyCard, ReplyForm, ReviewItem
-│   ├── payouts/       PayoutMethodCard, PayoutHistory
-│   ├── settings/      ProfileForm, VerificationCard, PasswordForm, AccountCard
-│   └── home/          HomeNav, UserMenu, HomeBackground, HomeHero, TopPicksCarousel,
-│                      PickCard, EventFilters, EventGrid, EventCard, EventModal,
-│                      TierOptions, QuantityPicker, GoingToSection, TicketItem,
-│                      MyEventsSection, AttendedItem, QuickReviewForm
-├── hooks/             useClickOutside, useOverviewStats, useOrgEventList,
-│                      useEventForm, useReviewStats, useHomeEvents
-├── context/           AuthContext (sessions, login, 2FA), ToastContext
-├── models/index.js    JS data model (typedefs, factories, validation, status rules)
-├── data/              db.js (localStorage DB), useDb.js, seed.js (demo data), artwork.js
-├── services/          eventService.js (save events, buy tickets, reviews, payouts)
-├── utils/             crypto, dates, format, ids, image, stats
-└── styles/global.css
-```
-
-## Important: this is frontend-only
-Data lives in the browser's **localStorage**, and passwords are hashed with SHA-256 plus a salt.
-That's fine for a school project or a demo, but it is **not secure for real users**. To go live,
-replace `src/data/db.js` and `AuthContext.jsx` with calls to a real backend (for example
-Node/Express with PostgreSQL, or Firebase or Supabase), and send the 2FA emails from that server.
+See [COMPONENTS_GUIDE.md](COMPONENTS_GUIDE.md) for every page, route and component.

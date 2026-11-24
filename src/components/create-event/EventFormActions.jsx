@@ -1,7 +1,7 @@
-import Icon from '../common/Icon.jsx';
+import Icon from "../common/Icon";
 
 /** Header buttons: Delete · Save draft · Publish event / Save changes */
-export default function EventFormActions({ canDelete, canSaveDraft, isPublished, readOnly, onDelete, onSaveDraft, onPublish }) {
+function EventFormActions({ canDelete, canSaveDraft, isPublished, readOnly, onDelete, onSaveDraft, onPublish }) {
   if (readOnly) return null;
   return (
     <>
@@ -16,8 +16,10 @@ export default function EventFormActions({ canDelete, canSaveDraft, isPublished,
         </button>
       )}
       <button type="button" className="btn btn-gradient" onClick={onPublish}>
-        {isPublished ? 'Save changes' : 'Publish event'} <Icon name="arrowRight" size={16} />
+        {isPublished ? "Save changes" : "Publish event"} <Icon name="arrowRight" size={16} />
       </button>
     </>
   );
 }
+
+export default EventFormActions;

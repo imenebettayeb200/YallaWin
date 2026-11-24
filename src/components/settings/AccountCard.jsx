@@ -1,7 +1,7 @@
-import Icon from '../common/Icon.jsx';
-import Panel from '../common/Panel.jsx';
+import Icon from "../common/Icon";
+import Panel from "../common/Panel";
 
-export default function AccountCard({ email, onLogout, onReset }) {
+function AccountCard({ email, onLogout, onReset }) {
   return (
     <Panel className="form-panel">
       <h2 className="panel-title">Account</h2>
@@ -17,3 +17,5 @@ export default function AccountCard({ email, onLogout, onReset }) {
     </Panel>
   );
 }
+
+export default AccountCard;

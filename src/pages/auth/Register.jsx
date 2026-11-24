@@ -1,81 +1,120 @@
-import { useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
-import AuthLayout from '../../components/layout/AuthLayout.jsx';
-import AuthCard from '../../components/auth/AuthCard.jsx';
-import TextField from '../../components/auth/TextField.jsx';
-import PasswordField from '../../components/auth/PasswordField.jsx';
-import Checkbox from '../../components/auth/Checkbox.jsx';
-import SubmitButton from '../../components/auth/SubmitButton.jsx';
-import AuthFooter from '../../components/auth/AuthFooter.jsx';
-import { homeFor, useAuth } from '../../context/AuthContext.jsx';
-import { isValidEmail, ROLES, validatePassword } from '../../models/index.js';
+import { useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
+import { isValidEmail, passwordError } from "../../utils";
+import AuthLayout from "../../components/layout/AuthLayout";
+import AuthCard from "../../components/auth/AuthCard";
+import TextField from "../../components/auth/TextField";
+import PasswordField from "../../components/auth/PasswordField";
+import Checkbox from "../../components/auth/Checkbox";
+import SubmitButton from "../../components/auth/SubmitButton";
+import AuthFooter from "../../components/auth/AuthFooter";
+import InterestPicker from "../../components/auth/InterestPicker";
 
-const EMPTY = { orgName: '', name: '', email: '', password: '', confirm: '', terms: false };
+const emptyForm = { firstName: "", lastName: "", email: "", password: "", confirm: "", interests: [], terms: false };
 
-function validate(form, isOrg) {
-  const errs = {};
-  if (isOrg && form.orgName.trim().length < 2) errs.orgName = 'Enter your organization name.';
-  if (form.name.trim().length < 2) errs.name = 'Enter your full name.';
-  if (!isValidEmail(form.email)) errs.email = 'Enter a valid email address.';
-  const pw = validatePassword(form.password);
-  if (pw) errs.password = pw;
-  if (form.confirm !== form.password) errs.confirm = 'Passwords do not match.';
-  if (!form.terms) errs.terms = 'Please accept the terms to continue.';
-  return errs;
-}
-
-export default function Register({ mode = 'user' }) {
-  const { user, register } = useAuth();
+/* Register — /register. Creates an attendee account (first/last name, email, password, interests). */
+function Register({ user, onRegister }) {
   const navigate = useNavigate();
-  const isOrg = mode === 'org';
-  const [form, setForm] = useState(EMPTY);
+  const [form, setForm] = useState(emptyForm);
   const [errors, setErrors] = useState({});
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
-  if (user) return <Navigate to={homeFor(user)} replace />;
+  if (user) return <Navigate to="/" replace></Navigate>;
 
-  const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
+  const change = (key, value) => {
+    setForm({ ...form, [key]: value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const errs = validate(form, isOrg);
-    setErrors(errs);
-    setError('');
-    if (Object.keys(errs).length) return;
-    try {
-      const created = register({ ...form, role: isOrg ? ROLES.ORG : ROLES.USER });
-      navigate(homeFor(created), { replace: true });
-    } catch (err) {
-      setError(err.message);
-    }
+    const newErrors = {};
+    if (form.firstName.trim().length < 2) newErrors.firstName = "Enter your first name.";
+    if (form.lastName.trim().length < 2) newErrors.lastName = "Enter your last name.";
+    if (!isValidEmail(form.email)) newErrors.email = "Enter a valid email address.";
+    if (passwordError(form.password)) newErrors.password = passwordError(form.password);
+    if (form.confirm !== form.password) newErrors.confirm = "Passwords do not match.";
+    if (!form.terms) newErrors.terms = "Please accept the terms to continue.";
+    setErrors(newErrors);
+    setError("");
+    if (Object.keys(newErrors).length > 0) return;
+
+    const problem = onRegister(form);
+    if (problem) setError(problem);
+    else navigate("/");
   };
 
   return (
     <AuthLayout>
       <AuthCard
-        title={isOrg ? 'Create an organization account' : 'Create your account'}
-        subtitle={isOrg ? 'Host events and sell tickets on YallaWin' : 'Discover and book the best events'}
+        title="Create your account"
+        subtitle="Discover and book the best events in Tunisia."
         error={error}
         onSubmit={handleSubmit}
       >
-        {isOrg && <TextField label="Organization name" placeholder="Foll'Amour" value={form.orgName} error={errors.orgName} onChange={set('orgName')} />}
-        <TextField label={isOrg ? 'Your full name' : 'Full name'} placeholder="Sarra Ben Ali" autoComplete="name" value={form.name} error={errors.name} onChange={set('name')} />
-        <TextField label="Email address" type="email" placeholder="you@example.com" autoComplete="email" value={form.email} error={errors.email} onChange={set('email')} />
-        <PasswordField placeholder="At least 8 characters, letters & numbers" autoComplete="new-password" value={form.password} error={errors.password} onChange={set('password')} />
-        <PasswordField label="Confirm password" placeholder="Repeat your password" autoComplete="new-password" value={form.confirm} error={errors.confirm} onChange={set('confirm')} />
-        <Checkbox label="I agree to the Terms and Privacy Policy" checked={form.terms} onChange={(v) => setForm((f) => ({ ...f, terms: v }))} />
+        <div className="two-cols">
+          <TextField
+            label="First name"
+            placeholder="Sarra"
+            autoComplete="given-name"
+            value={form.firstName}
+            error={errors.firstName}
+            onChange={(e) => change("firstName", e.target.value)}
+          ></TextField>
+          <TextField
+            label="Last name"
+            placeholder="Ben Ali"
+            autoComplete="family-name"
+            value={form.lastName}
+            error={errors.lastName}
+            onChange={(e) => change("lastName", e.target.value)}
+          ></TextField>
+        </div>
+        <TextField
+          label="Email address"
+          type="email"
+          placeholder="you@example.com"
+          autoComplete="email"
+          value={form.email}
+          error={errors.email}
+          onChange={(e) => change("email", e.target.value)}
+        ></TextField>
+        <PasswordField
+          placeholder="At least 8 characters, letters & numbers"
+          autoComplete="new-password"
+          value={form.password}
+          error={errors.password}
+          onChange={(e) => change("password", e.target.value)}
+        ></PasswordField>
+        <PasswordField
+          label="Confirm password"
+          placeholder="Repeat your password"
+          autoComplete="new-password"
+          value={form.confirm}
+          error={errors.confirm}
+          onChange={(e) => change("confirm", e.target.value)}
+        ></PasswordField>
+        <InterestPicker
+          value={form.interests}
+          onChange={(interests) => change("interests", interests)}
+        ></InterestPicker>
+        <Checkbox
+          label="I agree to the Terms and Privacy Policy"
+          checked={form.terms}
+          onChange={(value) => change("terms", value)}
+        ></Checkbox>
         {errors.terms && <p className="field-error">{errors.terms}</p>}
         <SubmitButton>Create account</SubmitButton>
-
         <AuthFooter
           question="Already have an account?"
           linkText="Sign in"
-          linkTo={isOrg ? '/login/organization' : '/login'}
-          switchText={isOrg ? 'Just going to events?' : 'Hosting events for a club or company?'}
-          switchLinkText={isOrg ? 'Create an attendee account' : 'Create an organization account'}
-          switchTo={isOrg ? '/register' : '/register/organization'}
-        />
+          linkTo="/login"
+          switchText="Hosting events for a club or company?"
+          switchLinkText="Apply as an organization"
+          switchTo="/register/organization"
+        ></AuthFooter>
       </AuthCard>
     </AuthLayout>
   );
 }
+
+export default Register;

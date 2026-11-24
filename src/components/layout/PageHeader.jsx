@@ -1,15 +1,9 @@
-import { Link, useNavigate } from 'react-router-dom';
-import Icon from '../common/Icon.jsx';
-import NotificationsBell from './NotificationsBell.jsx';
-import usePageTitle from '../../hooks/usePageTitle.js';
+import { Link } from "react-router-dom";
+import Icon from "../common/Icon";
+import NotificationsBell from "./NotificationsBell";
 
-/**
- * Title + subtitle on the left; search, bell, custom actions and "Create event" on the right.
- * Also sets the browser tab title (pageTitle if given, otherwise title).
- */
-export default function PageHeader({ title, subtitle, pageTitle, children, showCreate = false, showSearch = true }) {
-  const navigate = useNavigate();
-  usePageTitle(pageTitle || title);
+/* PageHeader — title + subtitle of a dashboard page, with the bell and the buttons on the right. */
+function PageHeader({ title, subtitle, notifications, showCreate, children }) {
   return (
     <header className="page-header">
       <div>
@@ -17,19 +11,19 @@ export default function PageHeader({ title, subtitle, pageTitle, children, showC
         {subtitle && <p className="page-subtitle">{subtitle}</p>}
       </div>
       <div className="page-actions">
-        {showSearch && (
-          <button type="button" className="icon-btn" aria-label="Search events" onClick={() => navigate('/org/events?focus=search')}>
-            <Icon name="search" size={17} />
-          </button>
-        )}
-        <NotificationsBell />
+        <Link to="/org/events" className="icon-btn" aria-label="Search events">
+          <Icon name="search" size={17}></Icon>
+        </Link>
+        <NotificationsBell notifications={notifications}></NotificationsBell>
         {children}
         {showCreate && (
           <Link to="/org/events/new" className="btn btn-gradient">
-            Create event <Icon name="plus" size={16} />
+            Create event <Icon name="plus" size={16}></Icon>
           </Link>
         )}
       </div>
     </header>
   );
 }
+
+export default PageHeader;

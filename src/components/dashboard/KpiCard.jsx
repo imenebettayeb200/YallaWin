@@ -1,7 +1,7 @@
-import Icon from '../common/Icon.jsx';
+import Icon from "../common/Icon";
 
 /** Small stat card: label + icon, big value, footer (usually a <Delta />). */
-export default function KpiCard({ label, icon, value, footer }) {
+function KpiCard({ label, icon, value, footer }) {
   return (
     <div className="panel kpi">
       <div className="kpi-head">
@@ -13,3 +13,5 @@ export default function KpiCard({ label, icon, value, footer }) {
     </div>
   );
 }
+
+export default KpiCard;

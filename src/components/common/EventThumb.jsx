@@ -1,26 +1,9 @@
-import { themeFor } from '../../data/artwork.js';
+import { eventImage } from "../../utils";
 
-export default function EventThumb({ event, size = 40 }) {
-  const style = { width: size, height: size };
-  if (event.coverImage) {
-    return <img className="event-thumb" src={event.coverImage} alt="" style={style} loading="lazy" />;
-  }
-  const theme = themeFor(event.category);
-  return (
-    <span
-      className="event-thumb event-thumb-fallback"
-      style={{ ...style, background: `linear-gradient(135deg, ${theme.from}, ${theme.to})`, fontSize: size * 0.5 }}
-      aria-hidden="true"
-    >
-      {theme.emoji}
-    </span>
-  );
+/* EventThumb — small square picture of an event (tables, lists). */
+function EventThumb({ event, size }) {
+  const width = size || 40;
+  return <img className="event-thumb" src={eventImage(event)} alt="" style={{ width: width, height: width }} />;
 }
 
-/** Background style for cards: cover image or category gradient. */
-export function coverStyle(event) {
-  const t = themeFor(event.category);
-  return {
-    backgroundImage: event.coverImage ? `url("${event.coverImage}")` : `linear-gradient(135deg, ${t.from}, ${t.to})`,
-  };
-}
+export default EventThumb;

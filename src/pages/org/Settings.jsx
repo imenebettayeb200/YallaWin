@@ -1,75 +1,91 @@
-import { useNavigate } from 'react-router-dom';
-import PageHeader from '../../components/layout/PageHeader.jsx';
-import ProfileForm from '../../components/settings/ProfileForm.jsx';
-import VerificationCard from '../../components/settings/VerificationCard.jsx';
-import PasswordForm from '../../components/settings/PasswordForm.jsx';
-import AccountCard from '../../components/settings/AccountCard.jsx';
-import { useAuth } from '../../context/AuthContext.jsx';
-import { useToast } from '../../context/ToastContext.jsx';
-import { db } from '../../data/db.js';
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import PageHeader from "../../components/layout/PageHeader";
+import ProfileForm from "../../components/settings/ProfileForm";
+import VerificationCard from "../../components/settings/VerificationCard";
+import PasswordForm from "../../components/settings/PasswordForm";
+import AccountCard from "../../components/settings/AccountCard";
 
-export default function Settings() {
-  const { organization, user, changePassword, logout } = useAuth();
-  const toast = useToast();
+/* Settings — /org/settings. Organization profile, bank details, verification, password and sign out. */
+function Settings({
+  user,
+  organization,
+  notifications,
+  onUpdateOrganization,
+  onUpdateUser,
+  onChangePassword,
+  onLogout,
+  onResetDemo,
+  showToast,
+}) {
   const navigate = useNavigate();
-  const showError = (message) => toast.show(message, 'error');
 
-  const saveProfile = (v) => {
-    try {
-      db.update('organizations', organization.id, {
-        name: v.name.trim(),
-        city: v.city.trim(),
-        bio: v.bio.trim(),
-        contactEmail: v.contactEmail.trim(),
-        payoutMethod: { holder: v.holder.trim(), bank: v.bank.trim() },
-      });
-      db.update('users', user.id, { name: v.name.trim() });
-      toast.show('Settings saved.');
-    } catch (err) {
-      showError(err.message);
-    }
+  useEffect(() => {
+    document.title = "Settings · YallaWin";
+    window.scrollTo(0, 0);
+  }, []);
+
+  const saveProfile = (values) => {
+    onUpdateOrganization(organization.id, {
+      name: values.name.trim(),
+      city: values.city.trim(),
+      bio: values.bio.trim(),
+      contactEmail: values.contactEmail.trim(),
+      bank: { holder: values.holder.trim(), name: values.bank.trim() },
+    });
+    onUpdateUser(user.id, { firstName: values.name.trim() });
+    showToast("Settings saved.");
   };
 
+  /* Returns true when the password changed (so the form empties itself). */
   const savePassword = (current, next) => {
-    try {
-      changePassword(current, next);
-      toast.show('Password updated.');
-      return true;
-    } catch (err) {
-      showError(err.message);
+    const problem = onChangePassword(current, next);
+    if (problem) {
+      showToast(problem, "error");
       return false;
     }
+    showToast("Password updated.");
+    return true;
   };
 
   const signOut = () => {
-    logout();
-    navigate('/', { replace: true });
+    onLogout();
+    navigate("/", { replace: true });
   };
 
   const resetDemo = () => {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm('Reset all data to the demo seed? Accounts you created will be removed.')) return;
-    db.reset();
-    signOut();
+    if (window.confirm("Reset all data to the demo data? Accounts and events you created will be removed.")) {
+      onResetDemo();
+      navigate("/", { replace: true });
+    }
+  };
+
+  const verify = () => {
+    onUpdateOrganization(organization.id, { verified: true });
+    showToast("Organization verified ✔");
   };
 
   return (
     <div className="page">
-      <PageHeader title="Settings" subtitle="Your organization profile, payouts and security" />
+      <PageHeader
+        title="Settings"
+        subtitle="Your organization profile, payouts and security"
+        notifications={notifications}
+      ></PageHeader>
       <div className="settings-grid">
-        <ProfileForm organization={organization} onSave={saveProfile} onError={showError} />
+        <ProfileForm
+          organization={organization}
+          onSave={saveProfile}
+          onError={(message) => showToast(message, "error")}
+        ></ProfileForm>
         <div className="settings-side">
-          <VerificationCard
-            verified={organization.verified}
-            onVerify={() => {
-              db.update('organizations', organization.id, { verified: true });
-              toast.show('Organization verified ✔');
-            }}
-          />
-          <PasswordForm onSubmit={savePassword} />
-          <AccountCard email={user.email} onLogout={signOut} onReset={resetDemo} />
+          <VerificationCard verified={organization.verified} onVerify={verify}></VerificationCard>
+          <PasswordForm onSubmit={savePassword}></PasswordForm>
+          <AccountCard email={user.email} onLogout={signOut} onReset={resetDemo}></AccountCard>
         </div>
       </div>
     </div>
   );
 }
+
+export default Settings;

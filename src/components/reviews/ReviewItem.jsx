@@ -1,9 +1,9 @@
-import ReviewCard from './ReviewCard.jsx';
-import ReplyCard from './ReplyCard.jsx';
-import ReplyForm from './ReplyForm.jsx';
+import ReviewCard from "./ReviewCard";
+import ReplyCard from "./ReplyCard";
+import ReplyForm from "./ReplyForm";
 
 /** A review followed by either the reply or the reply form. */
-export default function ReviewItem({ review, eventName, orgName, onReply }) {
+function ReviewItem({ review, eventName, orgName, onReply }) {
   return (
     <div className="review-block">
       <ReviewCard review={review} eventName={eventName} />
@@ -15,3 +15,5 @@ export default function ReviewItem({ review, eventName, orgName, onReply }) {
     </div>
   );
 }
+
+export default ReviewItem;

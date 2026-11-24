@@ -1,4 +1,5 @@
-export default function Checkbox({ label, checked, onChange }) {
+/* Checkbox — a checkbox with its label. onChange receives true / false. */
+function Checkbox({ label, checked, onChange }) {
   return (
     <label className="checkbox">
       <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} />
@@ -6,3 +7,5 @@ export default function Checkbox({ label, checked, onChange }) {
     </label>
   );
 }
+
+export default Checkbox;

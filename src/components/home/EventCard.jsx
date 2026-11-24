@@ -1,31 +1,43 @@
-import Icon from '../common/Icon.jsx';
-import { coverStyle } from '../common/EventThumb.jsx';
-import { themeFor } from '../../data/artwork.js';
-import { cityOf } from '../../hooks/useHomeEvents.js';
-import { eventCapacity, eventSold, eventStart, eventStatus, minPrice } from '../../models/index.js';
-import { formatCountdown, formatShortDate, formatTime } from '../../utils/format.js';
+import { Link } from "react-router-dom";
+import {
+  cityOf,
+  coverStyle,
+  eventStart,
+  formatCountdown,
+  formatShortDate,
+  formatTime,
+  isUpcoming,
+  minPrice,
+  spotsLeft,
+} from "../../utils";
+import Icon from "../common/Icon";
 
-/** Portrait event card with cover, heart, title, date, live countdown, price and spots left. */
-export default function EventCard({ event, saved, onToggleSave, onOpen, now = new Date() }) {
-  const left = eventCapacity(event) - eventSold(event);
+/*
+ * EventCard — portrait card with the cover, heart, title, date, countdown, price and spots left.
+ * Clicking the card opens the event page. The heart only shows when onToggleLike is given.
+ */
+function EventCard({ event, liked, onToggleLike }) {
+  const left = spotsLeft(event);
   const price = minPrice(event);
-  const status = eventStatus(event, now);
-  const countdown = status === 'ended' || status === 'draft' ? '' : formatCountdown(eventStart(event), now);
+  const countdown = isUpcoming(event) ? formatCountdown(eventStart(event)) : "";
+
+  const clickHeart = (e) => {
+    e.preventDefault(); /* do not open the event page */
+    onToggleLike(event.id);
+  };
+
   return (
-    <article className="ev-card" style={coverStyle(event)} onClick={() => onOpen(event)} tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && onOpen(event)}>
-      {!event.coverImage && <span className="ev-card-emoji">{themeFor(event.category).emoji}</span>}
-      <button
-        type="button"
-        className={`heart-btn ${saved ? 'saved' : ''}`}
-        onClick={(e) => {
-          e.stopPropagation();
-          onToggleSave(event.id);
-        }}
-        aria-label={saved ? 'Remove from saved' : 'Save event'}
-        aria-pressed={saved}
-      >
-        <Icon name="heart" size={13} filled={saved} />
-      </button>
+    <Link to={"/event/" + event.id} className="ev-card" style={coverStyle(event)}>
+      {onToggleLike && (
+        <button
+          type="button"
+          className={liked ? "heart-btn saved" : "heart-btn"}
+          onClick={clickHeart}
+          aria-label={liked ? "Unlike" : "Like"}
+        >
+          <Icon name="heart" size={13} filled={liked}></Icon>
+        </button>
+      )}
       <div className="ev-card-body">
         <h3>{event.title}</h3>
         <p>
@@ -33,13 +45,15 @@ export default function EventCard({ event, saved, onToggleSave, onOpen, now = ne
           {countdown && <span className="ev-when">{countdown}</span>}
         </p>
         <div className="ev-card-foot">
-          <span className="price-pill">{price === 0 ? 'Free' : `${price} TND`}</span>
-          <span className="ev-left">{left <= 0 ? 'Sold out' : `${left} spots left`}</span>
+          <span className="price-pill">{price === 0 ? "Free" : price + " TND"}</span>
+          <span className="ev-left">{left <= 0 ? "Sold out" : left + " spots left"}</span>
           <span className="ticket-btn" aria-hidden="true">
-            <Icon name="ticketPlain" size={13} />
+            <Icon name="ticketPlain" size={13}></Icon>
           </span>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }
+
+export default EventCard;

@@ -1,10 +1,13 @@
-import usePageTitle from '../../hooks/usePageTitle.js';
+import { useEffect } from "react";
 
-/** Glass card used by every auth screen. Also sets the browser tab title. */
-export default function AuthCard({ title, subtitle, error, onSubmit, className = '', pageTitle, children }) {
-  usePageTitle(pageTitle || title);
+/* AuthCard — the glass card (form) used by every sign-in screen. Also sets the browser tab title. */
+function AuthCard({ title, subtitle, error, onSubmit, className, pageTitle, children }) {
+  useEffect(() => {
+    document.title = (pageTitle || title) + " · YallaWin";
+  }, [pageTitle, title]);
+
   return (
-    <form className={`auth-card ${className}`} onSubmit={onSubmit} noValidate>
+    <form className={"auth-card " + (className || "")} onSubmit={onSubmit} noValidate>
       {title && <h1 className="auth-title">{title}</h1>}
       {subtitle && <p className="auth-subtitle">{subtitle}</p>}
       {error && (
@@ -16,3 +19,5 @@ export default function AuthCard({ title, subtitle, error, onSubmit, className =
     </form>
   );
 }
+
+export default AuthCard;

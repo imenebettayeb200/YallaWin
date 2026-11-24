@@ -1,38 +1,38 @@
-import { useCallback, useRef, useState } from 'react';
-import Icon from './Icon.jsx';
-import useClickOutside from '../../hooks/useClickOutside.js';
+import { useState } from "react";
+import Icon from "./Icon";
 
-/** Pill button with a menu. options: [{ key, label }]; the first option means "no filter". */
-export default function Dropdown({ label, value, options, onChange, icon = 'chevronDown' }) {
+/*
+ * Dropdown — pill button that opens a small menu (City, Sort...).
+ * options: [{ key, label }]. The first option means "no filter".
+ * Clicking anywhere outside the menu closes it (the invisible backdrop).
+ */
+function Dropdown({ label, value, options, onChange, icon }) {
   const [open, setOpen] = useState(false);
-  const ref = useRef(null);
-  const close = useCallback(() => setOpen(false), []);
-  useClickOutside(ref, open, close);
-
   const current = options.find((o) => o.key === value) || options[0];
   const isDefault = value === options[0].key;
 
+  const choose = (key) => {
+    onChange(key);
+    setOpen(false);
+  };
+
   return (
-    <div className="popover-wrap" ref={ref}>
-      <button type="button" className={`filter-pill ${isDefault ? '' : 'active'}`} onClick={() => setOpen((v) => !v)} aria-expanded={open}>
-        {isDefault ? label : current.label} <Icon name={icon} size={13} />
+    <div className="popover-wrap">
+      <button type="button" className={isDefault ? "filter-pill" : "filter-pill active"} onClick={() => setOpen(!open)}>
+        {isDefault ? label : current.label} <Icon name={icon || "chevronDown"} size={13}></Icon>
       </button>
+      {open && <div className="popover-backdrop" onClick={() => setOpen(false)}></div>}
       {open && (
         <div className="popover popover-right" role="menu">
           {options.map((o) => (
             <button
               key={o.key}
               type="button"
-              role="menuitemradio"
-              aria-checked={o.key === value}
-              className={`popover-item ${o.key === value ? 'selected' : ''}`}
-              onClick={() => {
-                onChange(o.key);
-                setOpen(false);
-              }}
+              className={o.key === value ? "popover-item selected" : "popover-item"}
+              onClick={() => choose(o.key)}
             >
               {o.label}
-              {o.key === value && <Icon name="check" size={13} />}
+              {o.key === value && <Icon name="check" size={13}></Icon>}
             </button>
           ))}
         </div>
@@ -40,3 +40,5 @@ export default function Dropdown({ label, value, options, onChange, icon = 'chev
     </div>
   );
 }
+
+export default Dropdown;

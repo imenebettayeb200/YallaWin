@@ -1,7 +1,12 @@
-import Panel from '../common/Panel.jsx';
-import { formatTND } from '../../utils/format.js';
+import Panel from "../common/Panel";
+import { formatTND } from "../../utils";
 
-const COLORS = ['linear-gradient(90deg,#ff2e7e,#ff2e9a)', '#3d6bff', '#ff9a1f', 'linear-gradient(90deg,#9b2cff,#d02cff)'];
+const COLORS = [
+  "linear-gradient(90deg,#ff2e7e,#ff2e9a)",
+  "#3d6bff",
+  "#ff9a1f",
+  "linear-gradient(90deg,#9b2cff,#d02cff)",
+];
 
 function RevenueRow({ label, value, max, color }) {
   return (
@@ -17,7 +22,7 @@ function RevenueRow({ label, value, max, color }) {
   );
 }
 
-export default function RevenueByEvent({ rows }) {
+function RevenueByEvent({ rows }) {
   const max = Math.max(1, ...rows.map((r) => r.value));
   return (
     <Panel className="revenue-panel">
@@ -34,3 +39,5 @@ export default function RevenueByEvent({ rows }) {
     </Panel>
   );
 }
+
+export default RevenueByEvent;

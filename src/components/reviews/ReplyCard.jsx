@@ -1,17 +1,19 @@
-import Avatar from '../common/Avatar.jsx';
-import { timeAgo } from '../../utils/format.js';
+import Avatar from "../common/Avatar";
+import { timeAgo } from "../../utils";
 
 /** Blue box under a review: the organization's public reply. */
-export default function ReplyCard({ orgName, reply }) {
+function ReplyCard({ orgName, reply }) {
   return (
     <div className="reply-card">
       <Avatar name={orgName} size={24} square />
       <div>
         <p className="reply-meta">
-          Reply from {orgName} · {timeAgo(reply.createdAt)}
+          Reply from {orgName} · {timeAgo(reply.date)}
         </p>
         <p className="reply-text">{reply.text}</p>
       </div>
     </div>
   );
 }
+
+export default ReplyCard;

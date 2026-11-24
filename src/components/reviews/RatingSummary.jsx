@@ -1,5 +1,5 @@
-import Panel from '../common/Panel.jsx';
-import Stars from '../common/Stars.jsx';
+import Panel from "../common/Panel";
+import Stars from "../common/Stars";
 
 function DistributionBar({ star, pct }) {
   return (
@@ -14,7 +14,7 @@ function DistributionBar({ star, pct }) {
 }
 
 /** Big "4.7" card with stars and the 5→1 distribution. */
-export default function RatingSummary({ avg, total, goAgain, distribution }) {
+function RatingSummary({ avg, total, goAgain, distribution }) {
   return (
     <Panel className="rating-panel">
       <p className="rating-big">{avg.toFixed(1)}</p>
@@ -30,3 +30,5 @@ export default function RatingSummary({ avg, total, goAgain, distribution }) {
     </Panel>
   );
 }
+
+export default RatingSummary;

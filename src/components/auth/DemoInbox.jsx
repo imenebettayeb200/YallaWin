@@ -1,15 +1,16 @@
-import Icon from '../common/Icon.jsx';
+import Icon from "../common/Icon";
 
-/**
- * There is no email server in a frontend-only app, so the "sent" email is
- * displayed here. Replace with a real email API when you add a backend.
+/*
+ * DemoInbox — there is no email server in this frontend-only project,
+ * so the email that "would be sent" (with the code) is shown here.
+ * Remove it when a real backend sends emails.
  */
-export default function DemoInbox({ to, subject, code }) {
+function DemoInbox({ to, subject, code }) {
   if (!code) return null;
   return (
-    <aside className="demo-inbox" aria-live="polite">
+    <aside className="demo-inbox">
       <div className="demo-inbox-head">
-        <Icon name="mail" size={16} />
+        <Icon name="mail" size={16}></Icon>
         <span>Demo inbox</span>
         <span className="demo-inbox-to">to {to}</span>
       </div>
@@ -18,3 +19,5 @@ export default function DemoInbox({ to, subject, code }) {
     </aside>
   );
 }
+
+export default DemoInbox;

@@ -1,5 +1,5 @@
 /** WizardCard — dark rounded card with a big title and a grey intro text. */
-export default function WizardCard({ title, intro, children, onSubmit }) {
+function WizardCard({ title, intro, children, onSubmit }) {
   return (
     <form className="wizard-card" onSubmit={onSubmit} noValidate>
       <h1 className="wizard-title">{title}</h1>
@@ -8,3 +8,5 @@ export default function WizardCard({ title, intro, children, onSubmit }) {
     </form>
   );
 }
+
+export default WizardCard;

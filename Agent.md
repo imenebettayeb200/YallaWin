@@ -38,8 +38,8 @@ glass cards, an italic serif logo and a pink → orange gradient for main action
 | UI | **React 18** (function components + hooks) |
 | Build tool | **Vite 5** |
 | Routing | **React Router 6** |
-| Data | `src/data/data.js` (all data) → saved in the browser's **localStorage** by `src/data/db.js` |
-| Styles | one file: `src/styles/global.css` (CSS variables at the top) |
+| Data | `src/Data.js` (all data) → `useState` in App.jsx → saved in **localStorage** by a `useEffect` |
+| Styles | `src/styles/global.css` (CSS variables at the top) + `org-auth.css` + `pages.css` |
 | Fonts | Inter (text) + Instrument Serif italic (logo, big numbers) |
 
 Run it: `npm install`, then `npm run dev` → http://localhost:5173
@@ -60,30 +60,30 @@ Demo logins (also available as buttons on the login page):
    and `document.title` are handled in `useEffect`, and **every effect that starts something
    returns a cleanup function** (clear the timer, remove the listener, unsubscribe).
 4. **Keep the dependency array honest**: list every value the effect uses.
-5. Reusable logic goes into a **custom hook** in `src/hooks/` (name starts with `use`).
+5. **Only `useState` and `useEffect`.** No custom hooks, no context, no `useRef`/`useMemo`.
+   All app data lives in `src/App.jsx` and goes down to pages and components as **props**.
 
 ### Components
 6. **One component per file**, file name = component name in PascalCase (`EventCard.jsx`).
 7. **Pages only assemble components.** A page in `src/pages/` must not contain long JSX —
    split it into components in `src/components/<feature>/`.
-8. Every component is **documented in [`docs/COMPONENTS.md`](docs/COMPONENTS.md)**
+8. Every component is **documented in [`COMPONENTS_GUIDE.md`](COMPONENTS_GUIDE.md)**
    (what it does + its props + the state/effects it uses). Add a short comment at the top
    of the file when the component is not obvious. When you add or change a component,
-   update `docs/COMPONENTS.md`.
+   update `COMPONENTS_GUIDE.md`.
 9. Components receive data through **props** and report actions through **callback props**
    named `onSomething` (`onOpen`, `onChange`, `onSubmit`).
 10. Shared, generic pieces (buttons, tabs, badges, cards) go in `components/common/`.
 
 ### Data
-11. **Every piece of data lives in `src/data/data.js`**: categories, category colours, menus,
-    tabs, filters, sort options, demo users, events, sales and reviews. Never hard-code a list
-    of content or options inside a component (only purely visual values such as chart colours
-    may stay next to the component that draws them).
-12. `src/data/seed.js` only contains logic that turns `data.js` into the first database.
-13. Components never touch `localStorage` directly for app data: they read with
-    `useDbState()` (`src/data/useDb.js`) and write through `src/services/eventService.js`
-    or `db.update / db.insert`.
-14. The shape of every object (User, Event, Review…) is documented in `src/models/index.js`.
+11. **Every piece of data lives in `src/Data.js`**: categories, colours, menus, tabs, filters,
+    sort options, fees, users, organizations, events, tickets, reviews and payouts. Never hard-code
+    a list of content or options inside a component.
+12. `src/App.jsx` copies Data.js into `useState` and one `useEffect` saves it in `localStorage`.
+    Components never touch `localStorage`; they call the action props (`onBook`, `onSave`...).
+13. Write code like in class: `function Name() {}` + `export default Name;`, double quotes,
+    CSS classes (no inline colours except data-driven ones).
+14. To connect a database later, only `App.jsx` changes (load with `fetch` in a `useEffect`).
 
 ### Style & design
 15. Use the CSS variables from `global.css` (`--blue`, `--pink`, `--gradient`, `--panel`…).
@@ -96,8 +96,7 @@ Demo logins (also available as buttons on the login page):
 19. Show a friendly message for every error (toast or red text). The app must never crash
     on empty data (no events, no reviews…): use `EmptyState`.
 20. Keep it accessible: buttons are `<button>`, inputs have labels, icons-only buttons have `aria-label`.
-21. Never store real passwords in plain text (they are hashed in `utils/crypto.js`).
-    This is a frontend demo: a real launch needs a backend.
+21. Passwords are plain text in the demo data. A real launch needs a backend that hashes them.
 
 ---
 
@@ -105,19 +104,16 @@ Demo logins (also available as buttons on the login page):
 
 ```
 src/
-├── main.jsx · App.jsx        entry point + all routes
-├── pages/                    screens (only assemble components)
-│   ├── home/                 public home page
-│   ├── auth/                 login, 2-step code, register, forgot password
-│   └── org/                  dashboard: Overview, Events, CreateEvent, Reviews, Payouts, Settings
-├── components/               reusable UI, one folder per feature (see docs/COMPONENTS.md)
-├── hooks/                    custom hooks (useState / useEffect logic)
-├── context/                  AuthContext (login, sessions, 2FA) · ToastContext
-├── data/                     data.js (ALL data) · seed.js · db.js · useDb.js · artwork.js
-├── models/                   object shapes + validation rules
-├── services/                 actions: save event, buy ticket, reply, payout
-├── utils/                    dates, formatting, crypto, images, stats
-└── styles/global.css
+├── main.jsx · App.jsx        entry point · all state, actions and routes
+├── Data.js                   ALL the data
+├── utils.js                  helper functions (dates, prices, validation, stats)
+├── pages/                    Home, EventDetails, Checkout, BookingConfirmed, GoingTo, MyEvents,
+│   │                         HostEvent, Profile, NotFound
+│   ├── auth/                 Login, Register, TwoStepVerification, ForgotPassword
+│   ├── org-auth/             OrgLogin, OrgForgotPassword, ApplyOrganization, ApplicationSubmitted
+│   └── org/                  Overview, Events, CreateEvent, Reviews, Payouts, Settings
+├── components/               one folder per feature (see COMPONENTS_GUIDE.md)
+└── styles/                   global.css · org-auth.css · pages.css
 ```
 
 ---
@@ -143,6 +139,6 @@ choose "OpenRouter" as the provider, paste your key, pick a model.
 **Never commit the API key**: keep it in a `.env` file that is listed in `.gitignore`.
 
 ### How to ask an agent for a change
-1. "Read `AGENTS.md` and `docs/COMPONENTS.md` first."
+1. "Read `Agent.md` and `COMPONENTS_GUIDE.md` first."
 2. Describe the change and the page it affects.
-3. "Follow the Rules; put new data in `data.js`; update `docs/COMPONENTS.md`; run `npm run build`."
+3. "Follow the Rules; put new data in `src/Data.js`; update `COMPONENTS_GUIDE.md`; run `npm run build`."

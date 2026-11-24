@@ -1,7 +1,7 @@
-import Icon from '../common/Icon.jsx';
+import Icon from "../common/Icon";
 
 /** WizardFooter — text button on the left (Cancel / Back), white pill on the right (Continue / Submit). */
-export default function WizardFooter({ backLabel, onBack, nextLabel, nextDisabled = false }) {
+function WizardFooter({ backLabel, onBack, nextLabel, nextDisabled = false }) {
   return (
     <div className="wizard-footer">
       <button type="button" className="wizard-back" onClick={onBack}>
@@ -13,3 +13,5 @@ export default function WizardFooter({ backLabel, onBack, nextLabel, nextDisable
     </div>
   );
 }
+
+export default WizardFooter;

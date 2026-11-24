@@ -1,8 +1,8 @@
-import EventRow from './EventRow.jsx';
+import EventRow from "./EventRow";
 
-const COLUMNS = ['Event', 'Date', 'Sold', 'Revenue', 'Status'];
+const COLUMNS = ["Event", "Date", "Sold", "Revenue", "Status"];
 
-export default function EventTable({ events, orgName = '', onOpen }) {
+function EventTable({ events, orgName = "", linkPrefix }) {
   return (
     <div className="event-table" role="table">
       <div className="event-row event-head" role="row">
@@ -14,8 +14,10 @@ export default function EventTable({ events, orgName = '', onOpen }) {
         <span aria-hidden="true" />
       </div>
       {events.map((e) => (
-        <EventRow key={e.id} event={e} orgName={orgName} onOpen={onOpen} />
+        <EventRow key={e.id} event={e} orgName={orgName} linkPrefix={linkPrefix} />
       ))}
     </div>
   );
 }
+
+export default EventTable;

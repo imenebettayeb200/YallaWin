@@ -1,31 +1,21 @@
-import { useRef, useState } from 'react';
-import Icon from '../common/Icon.jsx';
-import { readImage } from '../../utils/image.js';
+import { useState } from "react";
+import { readImage } from "../../utils";
+import Icon from "../common/Icon";
 
-/** Drag & drop / browse cover image, with "generate a cover" fallback. */
-export default function CoverUpload({ value, onChange, onGenerate, onError, disabled = false }) {
-  const fileRef = useRef(null);
+/*
+ * CoverUpload — drop an image on the box, or click it to browse your files.
+ * Without an image, the event gets a colourful cover drawn from its category.
+ */
+function CoverUpload({ value, onChange, onError, disabled }) {
   const [dragOver, setDragOver] = useState(false);
 
-  const handleFile = async (file) => {
-    try {
-      onChange(await readImage(file));
-    } catch (err) {
-      onError(err.message);
-    }
-  };
-
-  const browse = () => {
-    if (!disabled && fileRef.current) fileRef.current.click();
+  const handleFile = (file) => {
+    readImage(file, onChange, onError);
   };
 
   return (
-    <div
-      className={`dropzone ${dragOver ? 'drag' : ''} ${value ? 'has-image' : ''}`}
-      role="button"
-      tabIndex={0}
-      onClick={browse}
-      onKeyDown={(e) => e.key === 'Enter' && browse()}
+    <label
+      className={"dropzone " + (dragOver ? "drag " : "") + (value ? "has-image" : "")}
       onDragOver={(e) => {
         e.preventDefault();
         setDragOver(true);
@@ -45,43 +35,35 @@ export default function CoverUpload({ value, onChange, onGenerate, onError, disa
               type="button"
               className="dropzone-remove"
               onClick={(e) => {
-                e.stopPropagation();
-                onChange(null);
+                e.preventDefault();
+                onChange("");
               }}
             >
-              <Icon name="x" size={14} /> Remove
+              <Icon name="x" size={14}></Icon> Remove
             </button>
           )}
         </>
       ) : (
         <>
           <span className="dropzone-icon">
-            <Icon name="image" size={18} />
+            <Icon name="image" size={18}></Icon>
           </span>
           <span className="dropzone-title">Drop a cover image or browse</span>
-          <span className="dropzone-hint">JPG or PNG · 1600×1000 recommended</span>
-          <button
-            type="button"
-            className="link-blue link-button small"
-            onClick={(e) => {
-              e.stopPropagation();
-              onGenerate();
-            }}
-          >
-            <Icon name="sparkle" size={12} /> or generate a cover
-          </button>
+          <span className="dropzone-hint">JPG or PNG · 1600×1000 recommended · optional</span>
         </>
       )}
       <input
-        ref={fileRef}
         type="file"
         accept="image/png,image/jpeg,image/webp"
         hidden
+        disabled={disabled}
         onChange={(e) => {
           handleFile(e.target.files[0]);
-          e.target.value = '';
+          e.target.value = "";
         }}
       />
-    </div>
+    </label>
   );
 }
+
+export default CoverUpload;

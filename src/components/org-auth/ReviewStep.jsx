@@ -1,12 +1,12 @@
-import Checkbox from '../auth/Checkbox.jsx';
-import WizardCard from './WizardCard.jsx';
-import WizardFooter from './WizardFooter.jsx';
-import ReviewSection from './ReviewSection.jsx';
-import { ORG_DOCUMENTS, ORG_TYPES } from '../../data/data.js';
+import Checkbox from "../auth/Checkbox";
+import WizardCard from "./WizardCard";
+import WizardFooter from "./WizardFooter";
+import ReviewSection from "./ReviewSection";
+import { orgDocuments, orgTypes } from "../../Data";
 
 /** Step 3 — "Review and submit": summary of steps 1 and 2 + terms checkbox. */
-export default function ReviewStep({ info, documents, accepted, onAccept, error, submitting, onEditStep, onBack, onSubmit }) {
-  const typeLabel = (ORG_TYPES.find((t) => t.key === info.type) || {}).label || '—';
+function ReviewStep({ info, documents, accepted, onAccept, onEditStep, onBack, onSubmit }) {
+  const typeLabel = (orgTypes.find((t) => t.key === info.type) || {}).label || "—";
   return (
     <WizardCard
       title="Review and submit"
@@ -20,30 +20,35 @@ export default function ReviewStep({ info, documents, accepted, onAccept, error,
         title="Organization"
         onEdit={() => onEditStep(0)}
         rows={[
-          ['Name', info.name],
-          ['Type', typeLabel],
-          ['City', info.city],
-          ['Event types', info.eventTypes.join(', ')],
+          ["Name", info.name],
+          ["Type", typeLabel],
+          ["City", info.city],
+          ["Event types", info.eventTypes.join(", ")],
         ]}
       />
       <ReviewSection
         title="Contact"
         onEdit={() => onEditStep(0)}
         rows={[
-          ['Admin email', info.adminEmail],
-          ['Online presence', info.website],
+          ["Admin email", info.adminEmail],
+          ["Online presence", info.website],
         ]}
       />
       <ReviewSection
         title="Documents"
         onEdit={() => onEditStep(1)}
-        rows={ORG_DOCUMENTS.map((doc) => [doc.short, documents[doc.key] ? '✓ Uploaded' : 'Not provided'])}
+        rows={orgDocuments.map((doc) => [doc.short, documents[doc.key] ? "✓ Uploaded" : "Not provided"])}
       />
 
-      <Checkbox label="I confirm this information is accurate and accept the Organizer Terms" checked={accepted} onChange={onAccept} />
-      {error && <p className="field-error">{error}</p>}
+      <Checkbox
+        label="I confirm this information is accurate and accept the Organizer Terms"
+        checked={accepted}
+        onChange={onAccept}
+      />
 
-      <WizardFooter backLabel="Back" onBack={onBack} nextLabel={submitting ? 'Submitting…' : 'Submit for verification'} nextDisabled={!accepted || submitting} />
+      <WizardFooter backLabel="Back" onBack={onBack} nextLabel="Submit for verification" nextDisabled={!accepted} />
     </WizardCard>
   );
 }
+
+export default ReviewStep;

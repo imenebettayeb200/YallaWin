@@ -1,8 +1,8 @@
-import Icon from '../common/Icon.jsx';
-import Panel from '../common/Panel.jsx';
-import TicketTierRow from './TicketTierRow.jsx';
+import Icon from "../common/Icon";
+import Panel from "../common/Panel";
+import TicketTierRow from "./TicketTierRow";
 
-export default function TicketTiersSection({ tiers, errors, onChangeTier, onRemoveTier, onAddTier }) {
+function TicketTiersSection({ tiers, errors, onChangeTier, onRemoveTier, onAddTier }) {
   return (
     <Panel className="form-panel">
       <h2 className="panel-title">Tickets &amp; capacity</h2>
@@ -25,3 +25,5 @@ export default function TicketTiersSection({ tiers, errors, onChangeTier, onRemo
     </Panel>
   );
 }
+
+export default TicketTiersSection;

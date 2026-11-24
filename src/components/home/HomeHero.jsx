@@ -1,24 +1,25 @@
-import { APP_NAME } from '../../data/data.js';
-import { formatLongToday } from '../../utils/format.js';
+import { appName } from "../../Data";
+import { formatLongDate, todayIso } from "../../utils";
 
-/** "Welcome back, Name" (or "Welcome to YallaWin" for visitors) + a live clock and top picks. */
-export default function HomeHero({ user, now, liveCount = 0, searching = false, children }) {
-  const when = now ? formatLongToday(now) : '';
+/* HomeHero — "Welcome back, Sarra" (or "Welcome to YallaWin"), today's date and the top picks (children). */
+function HomeHero({ user, liveCount, children }) {
   return (
     <section className="home-hero">
       <h1>
-        {user ? 'Welcome back, ' : 'Welcome to '}
-        <em>{user ? user.name.split(' ')[0] : APP_NAME}</em>
+        {user ? "Welcome back, " : "Welcome to "}
+        <em>{user ? user.firstName : appName}</em>
       </h1>
       <p className="hero-live">
-        <span className="live-dot" aria-hidden="true" />
-        {searching ? 'Updating results…' : `${when} · ${liveCount} events on sale`}
+        <span className="live-dot" aria-hidden="true"></span>
+        {formatLongDate(todayIso())} · {liveCount} events on sale
       </p>
       <div className="divider-label">
-        <span>TOP PICKS FOR YOU</span>
+        <span>{user ? "TOP PICKS FOR YOU" : "TOP PICKS"}</span>
       </div>
       {children}
-      <div className="divider-short" />
+      <div className="divider-short"></div>
     </section>
   );
 }
+
+export default HomeHero;

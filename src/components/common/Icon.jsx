@@ -171,6 +171,16 @@ const PATHS = {
     </>
   ),
   check: <path d="M5 12l5 5L20 7" />,
+  minus: <path d="M5 12h14" />,
+  qr: (
+    <>
+      <rect x="3" y="3" width="7" height="7" rx="1" />
+      <rect x="14" y="3" width="7" height="7" rx="1" />
+      <rect x="3" y="14" width="7" height="7" rx="1" />
+      <path d="M14 14h3v3h-3z" />
+      <path d="M20 14v.01M14 20h.01M20 20h.01M17 17h3v3" />
+    </>
+  ),
   x: (
     <>
       <path d="M6 6l12 12" />
@@ -240,7 +250,7 @@ const PATHS = {
   ),
 };
 
-export default function Icon({ name, size = 18, strokeWidth = 1.8, filled = false, className = '', ...rest }) {
+function Icon({ name, size = 18, strokeWidth = 1.8, filled = false, className = "", ...rest }) {
   const content = PATHS[name];
   if (!content) return null;
   return (
@@ -248,7 +258,7 @@ export default function Icon({ name, size = 18, strokeWidth = 1.8, filled = fals
       width={size}
       height={size}
       viewBox="0 0 24 24"
-      fill={filled ? 'currentColor' : 'none'}
+      fill={filled ? "currentColor" : "none"}
       stroke="currentColor"
       strokeWidth={strokeWidth}
       strokeLinecap="round"
@@ -262,3 +272,4 @@ export default function Icon({ name, size = 18, strokeWidth = 1.8, filled = fals
     </svg>
   );
 }
+export default Icon;

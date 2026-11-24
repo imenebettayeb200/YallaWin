@@ -1,7 +1,7 @@
-import Icon from '../common/Icon.jsx';
-import Panel from '../common/Panel.jsx';
+import Icon from "../common/Icon";
+import Panel from "../common/Panel";
 
-export default function VerificationCard({ verified, onVerify }) {
+function VerificationCard({ verified, onVerify }) {
   return (
     <Panel className="form-panel">
       <h2 className="panel-title">Verification</h2>
@@ -20,3 +20,5 @@ export default function VerificationCard({ verified, onVerify }) {
     </Panel>
   );
 }
+
+export default VerificationCard;

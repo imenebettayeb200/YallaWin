@@ -2,8 +2,8 @@
    YallaWin — global styles (matches the Figma designs)
    ===================================================================== */
 :root {
-  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
 
   --bg-auth: #121212;
   --bg-dash: #06071a;
@@ -170,7 +170,11 @@ fieldset {
   font-size: 13px;
   font-weight: 600;
   white-space: nowrap;
-  transition: transform 0.12s ease, opacity 0.15s ease, background 0.15s ease, box-shadow 0.15s;
+  transition:
+    transform 0.12s ease,
+    opacity 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s;
 }
 .btn:active:not(:disabled) {
   transform: scale(0.98);
@@ -329,7 +333,9 @@ fieldset {
   border: 1px solid rgba(255, 255, 255, 0.22);
   background: rgba(255, 255, 255, 0.09);
   outline: none;
-  transition: border-color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
 }
 .input::placeholder,
 .input-icon input::placeholder,
@@ -486,7 +492,7 @@ fieldset {
   opacity: 0.85;
 }
 .auth-page::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, transparent 0%, transparent 35%, rgba(18, 18, 18, 0.65) 55%, var(--bg-auth) 75%);
@@ -662,8 +668,7 @@ fieldset {
   background:
     linear-gradient(90deg, #090b24 0, #090b24 200px, transparent 200px),
     radial-gradient(ellipse 60% 45% at 100% 0%, rgba(43, 62, 210, 0.42), transparent 70%),
-    radial-gradient(ellipse 50% 40% at 60% 100%, rgba(43, 62, 210, 0.22), transparent 70%),
-    var(--bg-dash);
+    radial-gradient(ellipse 50% 40% at 60% 100%, rgba(43, 62, 210, 0.22), transparent 70%), var(--bg-dash);
 }
 .sidebar {
   position: sticky;
@@ -911,7 +916,9 @@ fieldset {
   width: 100%;
   border-radius: 3px 3px 1px 1px;
   background: linear-gradient(180deg, #3d6bff, #2c4fd8);
-  transition: height 0.35s ease, filter 0.15s;
+  transition:
+    height 0.35s ease,
+    filter 0.15s;
 }
 .bar-hot {
   background: linear-gradient(180deg, #ff2e7e 0%, #ff6a3a 60%, #ff9a1f 100%);
@@ -1346,7 +1353,9 @@ fieldset {
   background: rgba(255, 255, 255, 0.05);
   cursor: pointer;
   overflow: hidden;
-  transition: border-color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
 }
 .dropzone:hover,
 .dropzone.drag {
@@ -1513,7 +1522,7 @@ fieldset {
   overflow: hidden;
 }
 .preview-card::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, transparent 35%, rgba(0, 0, 0, 0.75) 100%);
@@ -1960,10 +1969,17 @@ fieldset {
   filter: blur(90px);
 }
 .home-page::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 0%, rgba(17, 17, 17, 0.55) 28%, rgba(17, 17, 17, 0.85) 45%, rgba(17, 17, 17, 0.7) 75%, transparent 100%);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(17, 17, 17, 0.55) 28%,
+    rgba(17, 17, 17, 0.85) 45%,
+    rgba(17, 17, 17, 0.7) 75%,
+    transparent 100%
+  );
   pointer-events: none;
 }
 .home-nav,
@@ -2110,7 +2126,7 @@ fieldset {
 }
 .divider-label::before,
 .divider-label::after {
-  content: '';
+  content: "";
   flex: 1;
   height: 1px;
   background: rgba(255, 255, 255, 0.45);
@@ -2146,12 +2162,14 @@ fieldset {
   background-position: center;
   overflow: hidden;
   transform-origin: center center;
-  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s;
+  transition:
+    transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.3s;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
   text-align: left;
 }
 .pick::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.75) 100%);
@@ -2287,7 +2305,7 @@ fieldset {
   transition: background 0.15s;
 }
 .toggle-pill .switch::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 2px;
   left: 2px;
@@ -2318,14 +2336,16 @@ fieldset {
   background-position: center;
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 .ev-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
 }
 .ev-card::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, transparent 35%, rgba(0, 0, 0, 0.8) 100%);

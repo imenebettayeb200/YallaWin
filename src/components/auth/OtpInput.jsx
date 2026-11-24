@@ -1,80 +1,66 @@
-import { forwardRef, useImperativeHandle, useRef } from 'react';
-
-/**
- * Row of single-digit boxes: auto-advance, backspace, arrows and paste.
- * value: array of digits ('' for empty), onChange(nextArray)
- * ref.focus(index) focuses a box.
+/*
+ * OtpInput — 6 boxes for a code, one digit per box.
+ * value is an array like ["4","8","2","","",""]. Typing jumps to the next box,
+ * Backspace goes back, and pasting "482071" fills every box.
  */
-const OtpInput = forwardRef(function OtpInput({ value, onChange, hasError = false }, ref) {
-  const inputs = useRef([]);
-  const length = value.length;
+function OtpInput({ value, onChange, hasError }) {
+  const focusBox = (index) => {
+    const box = document.getElementById("otp-" + Math.max(0, Math.min(value.length - 1, index)));
+    if (box) box.focus();
+  };
 
-  const focusAt = (i) => {
-    const el = inputs.current[Math.max(0, Math.min(length - 1, i))];
-    if (el) {
-      el.focus();
-      el.select();
+  /* Puts the digits of "text" in the boxes starting at "start". */
+  const fill = (start, text) => {
+    const digits = text
+      .replace(/\D/g, "")
+      .slice(0, value.length - start)
+      .split("");
+    if (digits.length === 0) return;
+    const next = [...value];
+    digits.forEach((digit, i) => {
+      next[start + i] = digit;
+    });
+    onChange(next);
+    focusBox(start + digits.length);
+  };
+
+  const handleChange = (index, text) => {
+    if (text === "") {
+      onChange(value.map((digit, i) => (i === index ? "" : digit)));
+    } else {
+      fill(index, text.slice(-value.length));
     }
   };
 
-  useImperativeHandle(ref, () => ({ focus: focusAt }));
-
-  const fillFrom = (start, text) => {
-    const clean = text.replace(/\D/g, '').slice(0, length - start);
-    if (!clean) return;
-    const next = [...value];
-    clean.split('').forEach((ch, k) => {
-      next[start + k] = ch;
-    });
-    onChange(next);
-    focusAt(start + clean.length);
-  };
-
-  const handleChange = (i, text) => {
-    if (text === '') onChange(value.map((d, k) => (k === i ? '' : d)));
-    else fillFrom(i, text);
-  };
-
-  const handleKeyDown = (i, e) => {
-    if (e.key === 'Backspace' && !value[i] && i > 0) {
-      e.preventDefault();
-      onChange(value.map((d, k) => (k === i - 1 ? '' : d)));
-      focusAt(i - 1);
-    } else if (e.key === 'ArrowLeft') {
-      e.preventDefault();
-      focusAt(i - 1);
-    } else if (e.key === 'ArrowRight') {
-      e.preventDefault();
-      focusAt(i + 1);
+  const handleKeyDown = (index, e) => {
+    if (e.key === "Backspace" && value[index] === "" && index > 0) {
+      onChange(value.map((digit, i) => (i === index - 1 ? "" : digit)));
+      focusBox(index - 1);
     }
   };
 
   return (
     <div className="otp-row">
-      {value.map((d, i) => (
+      {value.map((digit, index) => (
         <input
-          // eslint-disable-next-line react/no-array-index-key
-          key={i}
-          ref={(el) => {
-            inputs.current[i] = el;
-          }}
-          className={`otp-input ${hasError ? 'input-error' : ''}`}
+          key={index}
+          id={"otp-" + index}
+          className={hasError ? "otp-input input-error" : "otp-input"}
           inputMode="numeric"
-          autoComplete={i === 0 ? 'one-time-code' : 'off'}
-          maxLength={length}
-          value={d}
-          aria-label={`Digit ${i + 1}`}
-          onChange={(e) => handleChange(i, e.target.value)}
-          onKeyDown={(e) => handleKeyDown(i, e)}
+          autoComplete={index === 0 ? "one-time-code" : "off"}
+          value={digit}
+          aria-label={"Digit " + (index + 1)}
+          onChange={(e) => handleChange(index, e.target.value)}
+          onKeyDown={(e) => handleKeyDown(index, e)}
           onPaste={(e) => {
             e.preventDefault();
-            fillFrom(i, e.clipboardData.getData('text'));
+            fill(index, e.clipboardData.getData("text"));
           }}
           onFocus={(e) => e.target.select()}
         />
       ))}
     </div>
   );
-});
+}
 
 export default OtpInput;

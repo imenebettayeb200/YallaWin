@@ -1,36 +1,44 @@
-import Icon from '../common/Icon.jsx';
-import EventThumb from '../common/EventThumb.jsx';
-import ProgressBar from '../common/ProgressBar.jsx';
-import StatusBadge from '../common/StatusBadge.jsx';
-import { eventCapacity, eventRevenue, eventSold, eventStatus, isFreeEvent } from '../../models/index.js';
-import { formatShortDate, formatTime, formatTND } from '../../utils/format.js';
+import { Link } from "react-router-dom";
+import Icon from "../common/Icon";
+import EventThumb from "../common/EventThumb";
+import ProgressBar from "../common/ProgressBar";
+import StatusBadge from "../common/StatusBadge";
+import {
+  eventCapacity,
+  eventRevenue,
+  eventSold,
+  eventStatus,
+  formatShortDate,
+  formatTime,
+  formatTND,
+  isFreeEvent,
+} from "../../utils";
 
 /** One row: thumbnail + name | date | sold bar | revenue | status | › */
-export default function EventRow({ event, orgName, onOpen }) {
+function EventRow({ event, orgName, linkPrefix }) {
   const status = eventStatus(event);
   const sold = eventSold(event);
   const capacity = eventCapacity(event);
-  const past = status === 'ended';
-  const open = () => onOpen(event.id);
+  const past = status === "ended";
 
   let revenue = formatTND(eventRevenue(event));
-  if (status === 'draft') revenue = '—';
-  else if (isFreeEvent(event)) revenue = 'Free';
+  if (status === "draft") revenue = "—";
+  else if (isFreeEvent(event)) revenue = "Free";
 
   return (
-    <div className={`event-row ${past ? 'is-past' : ''}`} role="row" tabIndex={0} onClick={open} onKeyDown={(e) => e.key === 'Enter' && open()}>
+    <Link to={linkPrefix + event.id} className={`event-row ${past ? "is-past" : ""}`} role="row">
       <span className="event-cell-main" role="cell">
         <EventThumb event={event} size={38} />
         <span>
           <span className="event-name">{event.title}</span>
           <span className="event-meta">
             {event.category}
-            {orgName ? ` · ${orgName}` : ''}
+            {orgName ? ` · ${orgName}` : ""}
           </span>
         </span>
       </span>
       <span className="event-date" role="cell">
-        {event.date ? `${formatShortDate(event.date, past)}${past ? '' : ` · ${formatTime(event.startTime)}`}` : '—'}
+        {event.date ? `${formatShortDate(event.date, past)}${past ? "" : ` · ${formatTime(event.startTime)}`}` : "—"}
       </span>
       <span className="event-sold" role="cell">
         <span>
@@ -49,6 +57,8 @@ export default function EventRow({ event, orgName, onOpen }) {
           <Icon name="chevronRight" size={14} />
         </span>
       </span>
-    </div>
+    </Link>
   );
 }
+
+export default EventRow;

@@ -1,12 +1,17 @@
-import WizardCard from './WizardCard.jsx';
-import WizardFooter from './WizardFooter.jsx';
-import DocumentUploadRow from './DocumentUploadRow.jsx';
-import SecurityNote from './SecurityNote.jsx';
-import { ORG_DOCUMENTS } from '../../data/data.js';
-import { isDocumentRequired } from '../../services/orgService.js';
+import WizardCard from "./WizardCard";
+import WizardFooter from "./WizardFooter";
+import DocumentUploadRow from "./DocumentUploadRow";
+import SecurityNote from "./SecurityNote";
+import { orgDocuments, permitEventTypes } from "../../Data";
 
 /** Step 2 — "Upload your documents". */
-export default function DocumentsStep({ documents, eventTypes, errors, onSelect, onBack, onNext }) {
+function DocumentsStep({ documents, eventTypes, errors, onSelect, onBack, onNext }) {
+  /* A venue permit is only needed for nightlife and outdoor events. */
+  const isRequired = (doc) => {
+    if (doc.required === "permit") return eventTypes.some((type) => permitEventTypes.includes(type));
+    return doc.required === true;
+  };
+
   return (
     <WizardCard
       title="Upload your documents"
@@ -17,12 +22,12 @@ export default function DocumentsStep({ documents, eventTypes, errors, onSelect,
       }}
     >
       <div className="doc-list">
-        {ORG_DOCUMENTS.map((doc) => (
+        {orgDocuments.map((doc) => (
           <DocumentUploadRow
             key={doc.key}
             doc={doc}
             file={documents[doc.key]}
-            required={isDocumentRequired(doc, eventTypes)}
+            required={isRequired(doc)}
             error={errors[doc.key]}
             onSelect={(file) => onSelect(doc, file)}
           />
@@ -33,3 +38,5 @@ export default function DocumentsStep({ documents, eventTypes, errors, onSelect,
     </WizardCard>
   );
 }
+
+export default DocumentsStep;

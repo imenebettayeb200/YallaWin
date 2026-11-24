@@ -1,7 +1,7 @@
-import Icon from '../common/Icon.jsx';
+import Icon from "../common/Icon";
 
 /** SecurityNote — small grey bar with an icon, e.g. "Your documents are encrypted…". */
-export default function SecurityNote({ icon = 'lock', children }) {
+function SecurityNote({ icon = "lock", children }) {
   return (
     <p className="security-note">
       <Icon name={icon} size={13} />
@@ -9,3 +9,5 @@ export default function SecurityNote({ icon = 'lock', children }) {
     </p>
   );
 }
+
+export default SecurityNote;

@@ -1,11 +1,11 @@
-import Icon from '../common/Icon.jsx';
+import Icon from "../common/Icon";
 
 /** Label + input with an icon inside (title, date, time, venue). */
-export default function IconField({ label, icon, error, ...inputProps }) {
+function IconField({ label, icon, error, ...inputProps }) {
   return (
     <label className="field">
       <span className="field-label">{label}</span>
-      <span className={`input-icon ${error ? 'input-error' : ''}`}>
+      <span className={`input-icon ${error ? "input-error" : ""}`}>
         <Icon name={icon} size={15} />
         <input {...inputProps} />
       </span>
@@ -13,3 +13,5 @@ export default function IconField({ label, icon, error, ...inputProps }) {
     </label>
   );
 }
+
+export default IconField;

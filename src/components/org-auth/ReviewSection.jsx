@@ -1,7 +1,7 @@
-import Icon from '../common/Icon.jsx';
+import Icon from "../common/Icon";
 
 /** ReviewSection — grey box of step 3: title, "✎ Edit" link and label/value rows. */
-export default function ReviewSection({ title, rows, onEdit }) {
+function ReviewSection({ title, rows, onEdit }) {
   return (
     <section className="review-box">
       <div className="review-box-head">
@@ -21,3 +21,5 @@ export default function ReviewSection({ title, rows, onEdit }) {
     </section>
   );
 }
+
+export default ReviewSection;

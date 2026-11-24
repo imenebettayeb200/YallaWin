@@ -1,8 +1,8 @@
-import Avatar from '../common/Avatar.jsx';
-import Stars from '../common/Stars.jsx';
-import { timeAgo } from '../../utils/format.js';
+import Avatar from "../common/Avatar";
+import Stars from "../common/Stars";
+import { timeAgo } from "../../utils";
 
-export default function ReviewCard({ review, eventName }) {
+function ReviewCard({ review, eventName }) {
   return (
     <article className="panel review-card">
       <div className="review-head">
@@ -10,7 +10,7 @@ export default function ReviewCard({ review, eventName }) {
         <div className="review-who">
           <span className="review-name">{review.authorName}</span>
           <span className="review-meta">
-            {eventName} · {timeAgo(review.createdAt)}
+            {eventName} · {timeAgo(review.date)}
           </span>
         </div>
         <Stars rating={review.rating} size={15} />
@@ -19,3 +19,5 @@ export default function ReviewCard({ review, eventName }) {
     </article>
   );
 }
+
+export default ReviewCard;

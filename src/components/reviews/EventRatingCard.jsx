@@ -1,8 +1,8 @@
-import Icon from '../common/Icon.jsx';
+import Icon from "../common/Icon";
 
-export default function EventRatingCard({ name, avg, active, onClick }) {
+function EventRatingCard({ name, avg, active, onClick }) {
   return (
-    <button type="button" className={`event-rating ${active ? 'active' : ''}`} onClick={onClick}>
+    <button type="button" className={`event-rating ${active ? "active" : ""}`} onClick={onClick}>
       <span className="event-rating-name">{name}</span>
       <span className="event-rating-value">
         <Icon name="star" size={14} className="star-on" filled /> {avg.toFixed(1)}
@@ -10,3 +10,5 @@ export default function EventRatingCard({ name, avg, active, onClick }) {
     </button>
   );
 }
+
+export default EventRatingCard;

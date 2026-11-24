@@ -1,28 +1,39 @@
-import { useState } from 'react';
-import Panel from '../common/Panel.jsx';
-import PasswordField from '../auth/PasswordField.jsx';
+import { useState } from "react";
+import PasswordField from "../auth/PasswordField";
 
 /** onSubmit(current, next) returns true when the password was changed. */
-export default function PasswordForm({ onSubmit }) {
-  const [current, setCurrent] = useState('');
-  const [next, setNext] = useState('');
+function PasswordForm({ onSubmit }) {
+  const [current, setCurrent] = useState("");
+  const [next, setNext] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (onSubmit(current, next)) {
-      setCurrent('');
-      setNext('');
+      setCurrent("");
+      setNext("");
     }
   };
 
   return (
-    <Panel as="form" className="form-panel" onSubmit={handleSubmit}>
+    <form className="panel form-panel" onSubmit={handleSubmit}>
       <h2 className="panel-title">Change password</h2>
-      <PasswordField label="Current password" autoComplete="current-password" value={current} onChange={(e) => setCurrent(e.target.value)} />
-      <PasswordField label="New password" autoComplete="new-password" value={next} onChange={(e) => setNext(e.target.value)} />
+      <PasswordField
+        label="Current password"
+        autoComplete="current-password"
+        value={current}
+        onChange={(e) => setCurrent(e.target.value)}
+      />
+      <PasswordField
+        label="New password"
+        autoComplete="new-password"
+        value={next}
+        onChange={(e) => setNext(e.target.value)}
+      />
       <button type="submit" className="btn btn-outline" disabled={!current || !next}>
         Update password
       </button>
-    </Panel>
+    </form>
   );
 }
+
+export default PasswordForm;

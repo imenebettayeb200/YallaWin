@@ -1,9 +1,12 @@
-import Icon from '../common/Icon.jsx';
+import Icon from "../common/Icon";
 
-export default function SubmitButton({ children, disabled = false, muted = false }) {
+/* SubmitButton — the big white "Sign in →" button of the forms. */
+function SubmitButton({ children, disabled, muted }) {
   return (
-    <button type="submit" className={`btn btn-block ${muted ? 'btn-muted' : 'btn-white'}`} disabled={disabled}>
-      {children} <Icon name="arrowRight" size={16} />
+    <button type="submit" className={muted ? "btn btn-block btn-muted" : "btn btn-block btn-white"} disabled={disabled}>
+      {children} <Icon name="arrowRight" size={16}></Icon>
     </button>
   );
 }
+
+export default SubmitButton;

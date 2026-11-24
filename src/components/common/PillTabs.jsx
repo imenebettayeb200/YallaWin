@@ -1,20 +1,21 @@
-/** Rounded tab bar with counters, e.g. [24 All] [6 Upcoming] … */
-export default function PillTabs({ tabs, value, counts = {}, onChange }) {
+/* PillTabs — rounded tab bar, e.g. [24 All] [6 Upcoming]. counts is optional. */
+function PillTabs({ tabs, value, counts, onChange }) {
   return (
     <div className="pill-tabs" role="tablist">
-      {tabs.map((t) => (
+      {tabs.map((tab) => (
         <button
-          key={t.key}
+          key={tab.key}
           type="button"
           role="tab"
-          aria-selected={value === t.key}
-          className={value === t.key ? 'active' : ''}
-          onClick={() => onChange(t.key)}
+          className={value === tab.key ? "active" : ""}
+          onClick={() => onChange(tab.key)}
         >
-          {counts[t.key] !== undefined && <span className="pill-count">{counts[t.key]}</span>}
-          {t.label}
+          {counts && counts[tab.key] !== undefined && <span className="pill-count">{counts[tab.key]}</span>}
+          {tab.label}
         </button>
       ))}
     </div>
   );
 }
+
+export default PillTabs;

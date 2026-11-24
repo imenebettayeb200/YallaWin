@@ -1,0 +1,707 @@
+/* =========================================================================
+   pages.css — styles of the pages added for the attendee side:
+   event details, checkout, ticket, Going To, My Events, profile, review popup,
+   and the phone layout (bottom tab bar).
+   The colours and sizes come from the variables at the top of global.css.
+   ========================================================================= */
+
+/* ---------- small shared helpers ---------- */
+.center {
+  text-align: center;
+}
+.two-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 34px 0 14px;
+}
+.section-head h2,
+.detail-section h2 {
+  font-size: 20px;
+  font-weight: 700;
+}
+.big-title {
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
+}
+.big-title em,
+.confirmed-title em {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.15em;
+}
+.list-label {
+  margin: 28px 0 10px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+/* Menus close when you click outside (the invisible backdrop). */
+.popover-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 35;
+}
+
+/* Links that look like cards or rows */
+a.ev-card,
+a.event-row,
+a.weekend-card {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+a.event-row {
+  display: grid;
+}
+
+/* Navbar links (NavLink adds the "active" class) */
+.home-tabs a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #fff;
+  text-decoration: none;
+}
+.home-tabs a:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+.home-tabs a.active {
+  background: #fff;
+  color: #111;
+  font-weight: 600;
+}
+
+/* Everything inside an attendee page sits above the background blobs. */
+.home-page > main,
+.weekend {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Home: "This weekend" (shown on phones) ---------- */
+.weekend {
+  display: none;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+.weekend-row {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+.weekend-card {
+  flex: 0 0 160px;
+}
+.weekend-cover {
+  display: block;
+  height: 110px;
+  border-radius: 14px;
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 8px;
+}
+.weekend-title {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+}
+.weekend-meta {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+/* ---------- Event details ---------- */
+.detail-page,
+.checkout-page,
+.going-page,
+.host-page,
+.confirmed-page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 10px 32px 40px;
+}
+.detail-top {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 32px;
+  margin-top: 16px;
+}
+.detail-cover {
+  position: relative;
+  min-height: 460px;
+  border-radius: 22px;
+  border: 1px solid var(--panel-border);
+  background-size: cover;
+  background-position: center;
+}
+.detail-cover .tag {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+}
+.detail-cover .tag + .tag {
+  top: 52px;
+}
+.detail-when {
+  color: var(--orange);
+  font-weight: 600;
+  font-size: 13px;
+}
+.detail-title {
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 6px 0 16px;
+}
+.host-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.host-name {
+  font-weight: 600;
+}
+.host-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.detail-facts {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+}
+.detail-facts li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.book-box {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.book-price {
+  font-size: 30px;
+  font-weight: 700;
+  margin-top: -8px;
+}
+.book-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 6px;
+}
+.book-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.book-actions .btn {
+  flex: 1;
+}
+.round-btn.liked {
+  color: var(--pink);
+}
+.book-going {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--green);
+}
+.detail-section {
+  margin-top: 40px;
+}
+.detail-section h2 {
+  margin-bottom: 12px;
+}
+.detail-about {
+  max-width: 760px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.85);
+}
+.lineup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+.lineup-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+}
+.location-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: center;
+}
+.map-box {
+  height: 170px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(135deg, #1b2a55, #102040);
+}
+.map-pin {
+  color: var(--pink);
+}
+.location-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.past-reviews {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+.past-summary {
+  text-align: center;
+}
+.past-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.mobile-book-bar {
+  display: none;
+}
+
+/* ---------- Review popup ---------- */
+.review-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 22px;
+}
+.review-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.review-modal-head h2 {
+  font-size: 24px;
+  font-weight: 700;
+}
+.review-modal-event {
+  font-weight: 600;
+  font-size: 16px;
+}
+.review-modal-stars {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 0;
+}
+
+/* ---------- Checkout ---------- */
+.checkout-page .stepper {
+  margin-top: 18px;
+}
+.checkout-head h1 {
+  font-size: 30px;
+  font-weight: 700;
+}
+.checkout-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 20px;
+  margin-top: 18px;
+  align-items: start;
+}
+.tier-option-desc {
+  display: block;
+  font-weight: 400;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.order-summary {
+  position: sticky;
+  top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.summary-lines p {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 13.5px;
+  border-bottom: 1px solid var(--panel-border);
+}
+.summary-total {
+  font-weight: 700;
+  font-size: 16px !important;
+  border-bottom: 0 !important;
+}
+.pay-methods {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.pay-method {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  text-align: left;
+}
+.pay-method.active {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ---------- Ticket card (confirmation, Going To) ---------- */
+.ticket-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+  border-radius: 18px;
+  background: #fff;
+  color: #111;
+}
+.ticket-card .muted {
+  color: #555;
+}
+.ticket-card.cancelled {
+  opacity: 0.6;
+}
+.ticket-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ticket-card-info h3 {
+  font-size: 22px;
+  font-weight: 700;
+}
+.ticket-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--pink);
+}
+.ticket-number {
+  font-family: ui-monospace, monospace;
+  font-size: 13px;
+}
+.ticket-card-qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  max-width: 150px;
+}
+.qr-code {
+  display: block;
+  border-radius: 8px;
+}
+
+/* ---------- Booking confirmed ---------- */
+.confirmed-page {
+  max-width: 620px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding-top: 40px;
+}
+.confirmed-check {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #1fbf5f;
+}
+.confirmed-title {
+  font-size: 44px;
+  font-weight: 700;
+}
+.confirmed-page .ticket-card {
+  width: 100%;
+}
+.confirmed-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* ---------- Going To ---------- */
+.going-page .pill-tabs {
+  margin-bottom: 20px;
+}
+.next-up {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 20px;
+  align-items: center;
+}
+.next-up-main {
+  display: flex;
+  gap: 18px;
+}
+.next-up-cover {
+  flex: 0 0 160px;
+  height: 200px;
+  border-radius: 16px;
+  background-size: cover;
+  background-position: center;
+}
+.next-up-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.next-up-info h2 {
+  font-size: 26px;
+  font-weight: 700;
+}
+.next-up-label {
+  color: var(--orange);
+  font-weight: 600;
+  font-size: 13px;
+}
+.next-up-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+.booking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.booking-row,
+.hosted-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+}
+.booking-row a {
+  color: inherit;
+  text-decoration: none;
+}
+.booking-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.booking-action {
+  flex-shrink: 0;
+}
+.review-prompt {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+  border-color: rgba(255, 46, 126, 0.45);
+}
+.review-prompt > div {
+  flex: 1;
+}
+
+/* ---------- My Events (hosting) & profile ---------- */
+.host-head,
+.profile-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+.profile-head {
+  justify-content: flex-start;
+}
+.profile-head .big-title {
+  margin-bottom: 4px;
+}
+.hosted-sold {
+  width: 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.hosted-actions {
+  display: flex;
+  gap: 8px;
+}
+.host-page .create-grid {
+  margin-top: 10px;
+}
+
+/* ---------- Phone tab bar (hidden on computers) ---------- */
+.mobile-tabbar {
+  display: none;
+}
+
+/* =============================== PHONES =============================== */
+@media (max-width: 900px) {
+  .detail-top,
+  .checkout-grid,
+  .next-up,
+  .past-reviews,
+  .location-card {
+    grid-template-columns: 1fr;
+  }
+  .detail-cover {
+    min-height: 280px;
+  }
+  .order-summary {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-page {
+    padding-bottom: 110px;
+  }
+  .detail-page {
+    padding-bottom: 90px;
+  }
+  .home-tabs {
+    display: none;
+  }
+  .home-nav .home-search {
+    display: none;
+  }
+  .weekend {
+    display: block;
+  }
+  .mobile-tabbar {
+    position: fixed;
+    left: 20px;
+    right: 20px;
+    bottom: 16px;
+    z-index: 60;
+    display: flex;
+    justify-content: space-around;
+    height: 64px;
+    border-radius: 22px;
+    background: rgba(20, 20, 30, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(14px);
+  }
+  .mobile-tabbar a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    flex: 1;
+    font-size: 10.5px;
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+  }
+  .mobile-tabbar a.active {
+    color: #fff;
+  }
+  .mobile-book-bar {
+    position: fixed;
+    left: 20px;
+    right: 20px;
+    bottom: 92px;
+    z-index: 55;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px 10px 18px;
+    border-radius: 20px;
+    background: rgba(20, 20, 30, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+  }
+  .detail-page,
+  .checkout-page,
+  .going-page,
+  .host-page,
+  .confirmed-page {
+    padding: 6px 16px 40px;
+  }
+  .detail-title,
+  .big-title {
+    font-size: 30px;
+  }
+  .two-cols,
+  .pay-methods {
+    grid-template-columns: 1fr;
+  }
+  .ticket-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  .ticket-card-info {
+    align-items: center;
+  }
+  .next-up-main {
+    flex-direction: column;
+  }
+  .next-up-cover {
+    flex-basis: auto;
+    height: 160px;
+  }
+  .booking-row,
+  .hosted-row,
+  .host-head,
+  .review-prompt {
+    flex-wrap: wrap;
+  }
+  .hosted-sold {
+    width: 100%;
+  }
+  .stepper-label {
+    display: none;
+  }
+}

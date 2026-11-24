@@ -1,7 +1,7 @@
-/** Dark glass card used everywhere in the dashboard. */
-export default function Panel({ title, actions = null, className = '', as: Tag = 'section', children, ...rest }) {
+/* Panel — the dark glass card used everywhere (title + optional buttons on the right). */
+function Panel({ title, actions, className, children }) {
   return (
-    <Tag className={`panel ${className}`} {...rest}>
+    <section className={"panel " + (className || "")}>
       {(title || actions) && (
         <div className="panel-head">
           {title && <h2 className="panel-title">{title}</h2>}
@@ -9,6 +9,8 @@ export default function Panel({ title, actions = null, className = '', as: Tag =
         </div>
       )}
       {children}
-    </Tag>
+    </section>
   );
 }
+
+export default Panel;

@@ -1,17 +1,12 @@
-/** Label + input + error message. Extra props go to the <input>. */
-export default function TextField({ label, error, labelExtra = null, ...inputProps }) {
+/* TextField — label + input + error message. The other props (type, placeholder...) go to the input. */
+function TextField({ label, error, ...inputProps }) {
   return (
     <label className="field">
-      {labelExtra ? (
-        <span className="field-label-row">
-          <span className="field-label">{label}</span>
-          {labelExtra}
-        </span>
-      ) : (
-        <span className="field-label">{label}</span>
-      )}
-      <input className={`input ${error ? 'input-error' : ''}`} {...inputProps} />
+      <span className="field-label">{label}</span>
+      <input className={error ? "input input-error" : "input"} {...inputProps} />
       {error && <span className="field-error">{error}</span>}
     </label>
   );
 }
+
+export default TextField;

@@ -15,9 +15,26 @@
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 72% 40% at 50% 110%, #a9c1ff 0%, #5b80ff 22%, #2f52e6 42%, rgba(29, 55, 210, 0.5) 60%, transparent 78%),
-    radial-gradient(ellipse 30% 80% at -4% 45%, rgba(38, 64, 225, 0.95) 0%, rgba(25, 40, 170, 0.5) 45%, transparent 75%),
-    radial-gradient(ellipse 30% 80% at 104% 45%, rgba(38, 64, 225, 0.95) 0%, rgba(25, 40, 170, 0.5) 45%, transparent 75%),
+    radial-gradient(
+      ellipse 72% 40% at 50% 110%,
+      #a9c1ff 0%,
+      #5b80ff 22%,
+      #2f52e6 42%,
+      rgba(29, 55, 210, 0.5) 60%,
+      transparent 78%
+    ),
+    radial-gradient(
+      ellipse 30% 80% at -4% 45%,
+      rgba(38, 64, 225, 0.95) 0%,
+      rgba(25, 40, 170, 0.5) 45%,
+      transparent 75%
+    ),
+    radial-gradient(
+      ellipse 30% 80% at 104% 45%,
+      rgba(38, 64, 225, 0.95) 0%,
+      rgba(25, 40, 170, 0.5) 45%,
+      transparent 75%
+    ),
     radial-gradient(ellipse 55% 45% at 50% 30%, #04041a 0%, rgba(4, 4, 26, 0.6) 60%, transparent 100%);
 }
 .org-auth-content {

@@ -1,56 +1,47 @@
-import { useState } from 'react';
-import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
-import AuthLayout from '../../components/layout/AuthLayout.jsx';
-import AuthCard from '../../components/auth/AuthCard.jsx';
-import TextField from '../../components/auth/TextField.jsx';
-import PasswordField from '../../components/auth/PasswordField.jsx';
-import Checkbox from '../../components/auth/Checkbox.jsx';
-import SubmitButton from '../../components/auth/SubmitButton.jsx';
-import AuthFooter from '../../components/auth/AuthFooter.jsx';
-import DemoAccounts from '../../components/auth/DemoAccounts.jsx';
-import { destinationAfterLogin, homeFor, useAuth } from '../../context/AuthContext.jsx';
-import { isValidEmail, ROLES } from '../../models/index.js';
+import { useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { isValidEmail } from "../../utils";
+import AuthLayout from "../../components/layout/AuthLayout";
+import AuthCard from "../../components/auth/AuthCard";
+import TextField from "../../components/auth/TextField";
+import PasswordField from "../../components/auth/PasswordField";
+import SubmitButton from "../../components/auth/SubmitButton";
+import AuthFooter from "../../components/auth/AuthFooter";
+import DemoAccounts from "../../components/auth/DemoAccounts";
 
-export default function Login({ mode = 'user' }) {
-  const { user, startLogin } = useAuth();
+/* Login — /login. Email + password, then the 6-digit code page (/verify). */
+function Login({ user, onLogin }) {
   const navigate = useNavigate();
-  const location = useLocation();
-  const isOrg = mode === 'org';
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({});
+  const [error, setError] = useState("");
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [remember, setRemember] = useState(false);
-  const [fieldErrors, setFieldErrors] = useState({});
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  if (user) return <Navigate to={homeFor(user)} replace />;
-  const from = location.state && location.state.from;
+  if (user) return <Navigate to={user.role === "org" ? "/org" : "/"} replace></Navigate>;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const errs = {};
-    if (!isValidEmail(email)) errs.email = 'Enter a valid email address.';
-    if (!password) errs.password = 'Enter your password.';
-    setFieldErrors(errs);
-    setError('');
-    if (Object.keys(errs).length) return;
+    const newErrors = {};
+    if (!isValidEmail(email)) newErrors.email = "Enter a valid email address.";
+    if (!password) newErrors.password = "Enter your password.";
+    setErrors(newErrors);
+    setError("");
+    if (Object.keys(newErrors).length > 0) return;
 
-    setLoading(true);
-    try {
-      const result = startLogin({ email, password, remember, expectRole: isOrg ? ROLES.ORG : null });
-      if (result.status === '2fa') navigate('/verify', { state: { from } });
-      else navigate(destinationAfterLogin(result.user, from), { replace: true });
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
-    }
+    const problem = onLogin(email, password, false);
+    if (problem) setError(problem);
+    else navigate("/verify");
+  };
+
+  const pickDemo = (account) => {
+    setEmail(account.email);
+    setPassword(account.password);
   };
 
   return (
     <AuthLayout>
       <AuthCard
-        title={isOrg ? 'Sign in to your organization' : 'Sign in to your account'}
+        title="Sign in to your account"
         subtitle="Log in with your email and password"
         error={error}
         onSubmit={handleSubmit}
@@ -61,42 +52,34 @@ export default function Login({ mode = 'user' }) {
           placeholder="you@example.com"
           autoComplete="email"
           value={email}
-          error={fieldErrors.email}
+          error={errors.email}
           onChange={(e) => setEmail(e.target.value)}
-        />
+        ></TextField>
         <PasswordField
           placeholder="Enter your password"
           autoComplete="current-password"
           value={password}
-          error={fieldErrors.password}
+          error={errors.password}
           onChange={(e) => setPassword(e.target.value)}
           labelExtra={
             <Link to="/forgot-password" className="link-blue small">
               Forgot password?
             </Link>
           }
-        />
-        <Checkbox label="Keep me signed in" checked={remember} onChange={setRemember} />
-        <SubmitButton disabled={loading}>{loading ? 'Signing in…' : 'Sign in'}</SubmitButton>
-
+        ></PasswordField>
+        <SubmitButton>Sign in</SubmitButton>
         <AuthFooter
           question="New to YallaWin?"
           linkText="Create account"
-          linkTo={isOrg ? '/register/organization' : '/register'}
-          externalIcon
-          switchText={isOrg ? 'Going to events?' : 'Hosting events for a club or company?'}
-          switchLinkText={isOrg ? 'Sign in as an attendee' : 'Sign in as an organization'}
-          switchTo={isOrg ? '/login' : '/login/organization'}
-        />
-
-        <DemoAccounts
-          showAttendee={!isOrg}
-          onPick={(account) => {
-            setEmail(account.email);
-            setPassword(account.password);
-          }}
-        />
+          linkTo="/register"
+          switchText="Hosting events for a club or company?"
+          switchLinkText="Sign in as an organization"
+          switchTo="/login/organization"
+        ></AuthFooter>
+        <DemoAccounts onPick={pickDemo}></DemoAccounts>
       </AuthCard>
     </AuthLayout>
   );
 }
+
+export default Login;
