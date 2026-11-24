@@ -5,7 +5,7 @@
  */
 import { seedDatabase } from './seed.js';
 
-const STORAGE_KEY = 'yallawin_db_v1';
+const STORAGE_KEY = 'yallawin_db_v2'; // v2: organizations have an OrganizationID
 export const COLLECTIONS = ['users', 'organizations', 'events', 'sales', 'reviews', 'payouts'];
 
 let state = null;

@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 
 /**
- * A clock that re-renders the screen on a timer.
- * Event lists, greetings, and countdowns stay current without a refresh.
+ * useNow — the current time, updated every `intervalMs` (default 1 second).
+ * Used by "Application under review" to update the status live.
  */
-export default function useNow(intervalMs = 30000) {
+export default function useNow(intervalMs = 1000) {
   const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
-    const id = window.setInterval(() => setNow(new Date()), intervalMs);
-    return () => window.clearInterval(id);
+    const timer = window.setInterval(() => setNow(new Date()), intervalMs);
+    return () => window.clearInterval(timer); // stop the timer when the page closes
   }, [intervalMs]);
 
   return now;

@@ -1,8 +1,9 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import { db } from '../data/db.js';
 import { useDbState } from '../data/useDb.js';
 import { hashPassword, randomCode, randomHex } from '../utils/crypto.js';
 import { createOrganization, createUser, isValidEmail, ROLES, validatePassword } from '../models/index.js';
+import { applicationStatus, approveIfDue, findOrganization } from '../services/orgService.js';
 
 const SESSION_KEY = 'yw_session';
 const PENDING_KEY = 'yw_pending_2fa';
@@ -80,21 +81,6 @@ export function AuthProvider({ children }) {
   const [session, setSession] = useState(readSession);
   const [pending, setPending] = useState(readPending);
 
-  useEffect(() => {
-    if (!session) return undefined;
-    const wait = session.expiresAt - Date.now();
-    if (wait <= 0) {
-      clearStoredSession();
-      setSession(null);
-      return undefined;
-    }
-    const id = window.setTimeout(() => {
-      clearStoredSession();
-      setSession(null);
-    }, wait);
-    return () => window.clearTimeout(id);
-  }, [session]);
-
   const user = useMemo(
     () => (session ? dbState.users.find((u) => u.id === session.userId) || null : null),
     [session, dbState.users],
@@ -137,23 +123,45 @@ export function AuthProvider({ children }) {
     [savePending],
   );
 
+  /**
+   * Step 1 of sign-in. Attendees use their email; organizations use their
+   * OrganizationID (their admin email also works). Organizations whose
+   * application is still under review cannot sign in yet.
+   */
   const startLogin = useCallback(
     ({ email, password, remember, expectRole = null }) => {
-      const normalized = String(email || '').trim().toLowerCase();
-      if (!isValidEmail(normalized)) throw new Error('Enter a valid email address.');
-      const found = db.findOne('users', (u) => u.email === normalized);
-      if (!found || hashPassword(password, found.salt) !== found.passwordHash) {
-        throw new Error('Incorrect email or password.');
+      const identifier = String(email || '').trim();
+      let found = null;
+
+      if (expectRole === ROLES.ORG) {
+        if (!identifier) throw new Error('Enter your OrganizationID.');
+        const org = findOrganization(identifier);
+        found = org ? db.findById('users', org.ownerId) : null;
+        if (!found || hashPassword(password, found.salt) !== found.passwordHash) {
+          throw new Error('Incorrect OrganizationID or password.');
+        }
+      } else {
+        const normalized = identifier.toLowerCase();
+        if (!isValidEmail(normalized)) throw new Error('Enter a valid email address.');
+        found = db.findOne('users', (u) => u.email === normalized);
+        if (!found || hashPassword(password, found.salt) !== found.passwordHash) {
+          throw new Error('Incorrect email or password.');
+        }
       }
-      if (expectRole === ROLES.ORG && found.role !== ROLES.ORG) {
-        throw new Error('This is not an organization account. Use the regular sign-in page.');
+
+      if (found.role === ROLES.ORG) {
+        const org = approveIfDue(found.orgId);
+        if (applicationStatus(org) === 'pending') {
+          throw new Error('Your application is still under review. We will email your OrganizationID once it is approved.');
+        }
       }
+
       if (isDeviceTrusted(found.id)) {
         savePending(null);
         beginSession(found.id, remember);
         return { status: 'signed_in', user: found };
       }
-      issueCode({ userId: found.id, email: found.email, remember: Boolean(remember) });
+      issueCode({ userId: found.id, email: found.email, role: found.role, remember: Boolean(remember) });
       return { status: '2fa' };
     },
     [beginSession, issueCode, savePending],
@@ -162,7 +170,7 @@ export function AuthProvider({ children }) {
   const resendCode = useCallback(() => {
     const p = readPending();
     if (!p) throw new Error('Your sign-in session expired. Please sign in again.');
-    return issueCode({ userId: p.userId, email: p.email, remember: p.remember });
+    return issueCode({ userId: p.userId, email: p.email, role: p.role, remember: p.remember });
   }, [issueCode]);
 
   const cancelPending = useCallback(() => savePending(null), [savePending]);
@@ -230,13 +238,22 @@ export function AuthProvider({ children }) {
 
   /* ---------------------------- password reset --------------------------- */
 
-  const requestPasswordReset = useCallback((email) => {
-    const normalized = String(email || '').trim().toLowerCase();
-    if (!isValidEmail(normalized)) throw new Error('Enter a valid email address.');
-    const found = db.findOne('users', (u) => u.email === normalized);
+  /** identifier = email, or an OrganizationID (the code then goes to the organization's admin email). */
+  const requestPasswordReset = useCallback((identifier) => {
+    const value = String(identifier || '').trim();
+    let found = null;
+    if (value.includes('@')) {
+      const normalized = value.toLowerCase();
+      if (!isValidEmail(normalized)) throw new Error('Enter a valid email address.');
+      found = db.findOne('users', (u) => u.email === normalized);
+    } else {
+      if (!value) throw new Error('Enter your OrganizationID or admin email.');
+      const org = findOrganization(value);
+      found = org ? db.findById('users', org.ownerId) : null;
+    }
     if (!found) {
       sessionStorage.removeItem(RESET_KEY);
-      return { demoCode: null };
+      return { demoCode: null, email: null };
     }
     const code = randomCode();
     const salt = randomHex(8);
@@ -244,7 +261,7 @@ export function AuthProvider({ children }) {
       RESET_KEY,
       JSON.stringify({ userId: found.id, codeSalt: salt, codeHash: hashPassword(code, salt), expiresAt: Date.now() + CODE_TTL_MS }),
     );
-    return { demoCode: code };
+    return { demoCode: code, email: found.email };
   }, []);
 
   const resetPassword = useCallback((code, newPassword) => {

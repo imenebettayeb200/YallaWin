@@ -15,6 +15,10 @@ import Payouts from './pages/org/Payouts.jsx';
 import Reviews from './pages/org/Reviews.jsx';
 import Settings from './pages/org/Settings.jsx';
 import Home from './pages/home/Home.jsx';
+import ApplyOrganization from './pages/org-auth/ApplyOrganization.jsx';
+import ApplicationSubmitted from './pages/org-auth/ApplicationSubmitted.jsx';
+import OrgForgotPassword from './pages/org-auth/OrgForgotPassword.jsx';
+import OrgLogin from './pages/org-auth/OrgLogin.jsx';
 
 function NotFound() {
   usePageTitle('Page not found');
@@ -32,7 +36,8 @@ function NotFound() {
 /**
  * App — all the routes of YallaWin.
  *   /                    public home page
- *   /login … /verify     authentication
+ *   /login … /verify     authentication (attendees)
+ *   /register/organization, /login/organization …   organization sign-up & sign-in
  *   /org/…               organization dashboard (needs an organization account)
  */
 export default function App() {
@@ -44,13 +49,17 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/app" element={<Navigate to="/" replace />} />
 
-        {/* Authentication */}
+        {/* Authentication — attendees */}
         <Route path="/login" element={<Login mode="user" />} />
-        <Route path="/login/organization" element={<Login mode="org" />} />
         <Route path="/register" element={<Register mode="user" />} />
-        <Route path="/register/organization" element={<Register mode="org" />} />
-        <Route path="/verify" element={<TwoStepVerification />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/verify" element={<TwoStepVerification />} />
+
+        {/* Authentication — organizations (apply → under review → OrganizationID → sign in) */}
+        <Route path="/register/organization" element={<ApplyOrganization />} />
+        <Route path="/register/organization/submitted" element={<ApplicationSubmitted />} />
+        <Route path="/login/organization" element={<OrgLogin />} />
+        <Route path="/forgot-password/organization" element={<OrgForgotPassword />} />
 
         {/* Organization dashboard (requires an organization sign-in) */}
         <Route

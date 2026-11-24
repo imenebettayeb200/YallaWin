@@ -7,6 +7,7 @@
  *  4. Demo events        (dates are "days from today", so the demo never gets old)
  *  5. Demo sales         (which events tickets are sold for)
  *  6. Demo reviews       (names, texts, replies, tags)
+ *  7. Organization sign-up (types, event types, documents, steps)
  *
  * This file contains only plain data (no logic). src/data/seed.js turns it into
  * the initial database the first time the app opens.
@@ -104,7 +105,7 @@ export const DEFAULT_HOME_FILTERS = { category: 'all', freeOnly: false, city: 'a
 
 /** Logins shown on the sign-in page ("Demo" buttons). */
 export const DEMO_ACCOUNTS = {
-  org: { email: 'contact@follamour.tn', password: 'Follamour2026' },
+  org: { email: 'contact@follamour.tn', password: 'Follamour2026', organizationId: 'ORG-FOLLAMOUR-2041' },
   user: { email: 'sarra@example.com', password: 'Sarra2026' },
 };
 
@@ -144,6 +145,17 @@ export const DEMO_ORGANIZATIONS = [
     bio: 'Music, nightlife and community events on the Gammarth coast since 2019.',
     contactEmail: DEMO_ACCOUNTS.org.email,
     payoutMethod: { holder: "Foll'Amour SARL", bank: 'BIAT' },
+    organizationId: DEMO_ACCOUNTS.org.organizationId,
+    type: 'company',
+    website: 'instagram.com/follamour',
+    eventTypes: ['Nightlife', 'Music'],
+    documents: {
+      rne: { name: 'extrait_RNE_follamour.pdf', size: 1258291 },
+      adminId: { name: 'cin_admin.jpg', size: 860160 },
+      venuePermit: { name: 'autorisation_lieu.pdf', size: 524288 },
+      logo: { name: 'logo_follamour.png', size: 204800 },
+    },
+    verification: { status: 'approved' },
     createdDaysAgo: 420,
   },
 ];
@@ -309,3 +321,42 @@ export const REVIEW_TAG_COUNTS = [
   ['Crowded bar', 11],
   ['Parking', 7],
 ];
+
+/* =================== 7. ORGANIZATION SIGN-UP =================== */
+
+/** Steps of "Apply to get verified". */
+export const ORG_SIGNUP_STEPS = ['Organization', 'Documents', 'Review'];
+
+/** "Organization type" buttons. */
+export const ORG_TYPES = [
+  { key: 'company', label: 'Company' },
+  { key: 'club', label: 'University club' },
+  { key: 'ngo', label: 'Association / NGO' },
+  { key: 'collective', label: 'Collective' },
+];
+
+/** "What kind of events do you host?" chips. */
+export const ORG_EVENT_TYPES = ['Nightlife', 'Music', 'Food', 'Sports', 'Workshops', 'Tech'];
+
+/** Event types that need a venue permit (nightlife & outdoor events). */
+export const PERMIT_EVENT_TYPES = ['Nightlife', 'Sports'];
+
+/**
+ * Documents asked in step 2. required: true = always needed,
+ * 'permit' = needed only when the organization hosts PERMIT_EVENT_TYPES.
+ */
+export const ORG_DOCUMENTS = [
+  { key: 'rne', label: 'Business registration (RNE extract)', short: 'RNE extract', hint: 'PDF or photo of your RNE extract', accept: '.pdf,image/png,image/jpeg', required: true },
+  { key: 'adminId', label: 'Admin ID card (CIN / passport)', short: 'Admin ID', hint: 'Photo or scan, both sides', accept: '.pdf,image/png,image/jpeg', required: true },
+  { key: 'venuePermit', label: 'Venue permit or authorization', short: 'Venue permit', hint: 'Required for nightlife & outdoor events', accept: '.pdf,image/png,image/jpeg', required: 'permit' },
+  { key: 'logo', label: 'Logo', short: 'Logo', hint: 'Square, at least 400×400 px', accept: 'image/png,image/jpeg', required: false },
+];
+
+/** Biggest document accepted (in MB). */
+export const MAX_DOCUMENT_MB = 10;
+
+/**
+ * The "trust team" review is simulated: an application is approved this many
+ * seconds after it is submitted (in real life: 24–48h by a person).
+ */
+export const DEMO_REVIEW_SECONDS = 20;

@@ -1,0 +1,465 @@
+/* =====================================================================
+   Organization sign-up & sign-in screens (blue "FOR ORGANIZATIONS" look)
+   Imported in main.jsx after global.css.
+   ===================================================================== */
+
+/* ------------------------------- page -------------------------------- */
+.org-auth-page {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #04041a;
+}
+.org-auth-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 72% 40% at 50% 110%, #a9c1ff 0%, #5b80ff 22%, #2f52e6 42%, rgba(29, 55, 210, 0.5) 60%, transparent 78%),
+    radial-gradient(ellipse 30% 80% at -4% 45%, rgba(38, 64, 225, 0.95) 0%, rgba(25, 40, 170, 0.5) 45%, transparent 75%),
+    radial-gradient(ellipse 30% 80% at 104% 45%, rgba(38, 64, 225, 0.95) 0%, rgba(25, 40, 170, 0.5) 45%, transparent 75%),
+    radial-gradient(ellipse 55% 45% at 50% 30%, #04041a 0%, rgba(4, 4, 26, 0.6) 60%, transparent 100%);
+}
+.org-auth-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 56px 20px 60px;
+}
+.org-auth-logo {
+  display: inline-block;
+  margin-bottom: 26px;
+  text-align: center;
+}
+.org-auth-logo .logo {
+  align-items: center;
+}
+.org-auth-logo .logo-word {
+  font-size: 52px;
+}
+.org-auth-logo .logo-sub {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  color: #fff;
+}
+
+/* ------------------------------ stepper ------------------------------ */
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  list-style: none;
+  margin: 0 0 22px;
+  padding: 0;
+}
+.stepper-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+}
+.stepper-step.current {
+  color: #fff;
+  font-weight: 500;
+}
+.stepper-step.todo {
+  color: rgba(255, 255, 255, 0.7);
+}
+.stepper-dot {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+.stepper-step.current .stepper-dot {
+  background: #fff;
+  color: #111;
+  border-color: #fff;
+}
+.stepper-step.done .stepper-dot {
+  background: #1fbf5f;
+  border-color: #1fbf5f;
+  color: #fff;
+}
+.stepper-line {
+  width: 32px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* ---------------------------- wizard card ---------------------------- */
+.wizard-card {
+  width: 100%;
+  max-width: 476px;
+  padding: 26px 24px 22px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(14, 14, 20, 0.94) 0%, rgba(20, 22, 40, 0.86) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.wizard-title {
+  font-size: 25px;
+  font-weight: 500;
+  letter-spacing: -0.4px;
+  line-height: 1.2;
+}
+.wizard-intro {
+  margin: 10px 0 16px;
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.68);
+}
+.wizard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); /* minmax(0, …) stops long inputs from overflowing */
+  gap: 10px;
+}
+.wizard-grid > * {
+  min-width: 0;
+}
+.wizard-card .field {
+  margin-bottom: 12px;
+}
+.wizard-card .field-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+}
+.wizard-card .input-icon,
+.wizard-card .input {
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.22);
+  font-size: 12px;
+}
+.wizard-card .input-icon:focus-within {
+  border-color: #fff;
+}
+
+.org-type-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 7px;
+}
+.org-type {
+  height: 31px;
+  padding: 0 6px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 10.5px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.org-type:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+.org-type.active {
+  background: #fff;
+  color: #111;
+  border-color: #fff;
+}
+
+.wizard-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 18px;
+}
+.wizard-back {
+  border: 0;
+  background: none;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.wizard-back:hover {
+  text-decoration: underline;
+}
+.wizard-next {
+  height: 36px;
+  padding: 0 18px;
+}
+
+/* ----------------------------- documents ----------------------------- */
+.doc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.doc-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1.5px dashed rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+}
+.doc-row.uploaded {
+  border: 1.5px solid rgba(31, 191, 95, 0.75);
+  background: rgba(255, 255, 255, 0.1);
+}
+.doc-row.has-error {
+  border-color: rgba(255, 77, 79, 0.8);
+}
+.doc-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.doc-row.uploaded .doc-icon {
+  background: #1fbf5f;
+  border-color: #1fbf5f;
+}
+.doc-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+.doc-title {
+  font-size: 12.5px;
+  font-weight: 500;
+}
+.doc-optional {
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 400;
+}
+.doc-hint {
+  font-size: 9.5px;
+  color: rgba(255, 255, 255, 0.6);
+}
+.doc-row.has-error .doc-hint {
+  color: #ff8a8a;
+}
+.doc-meta {
+  font-size: 9.5px;
+  color: #35d07f;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.doc-replace {
+  border: 0;
+  background: none;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 6px 10px;
+}
+.doc-upload {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.14);
+  font-size: 10.5px;
+  font-weight: 600;
+}
+.security-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 9.5px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ------------------------------- review ------------------------------ */
+.review-box {
+  margin-bottom: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.review-box-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.review-box-head h2 {
+  font-size: 13px;
+  font-weight: 600;
+}
+.review-box dl {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.review-box-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 10.5px;
+}
+.review-box-row dt {
+  color: rgba(255, 255, 255, 0.6);
+}
+.review-box-row dd {
+  margin: 0;
+  text-align: right;
+  color: #fff;
+}
+.wizard-card .checkbox {
+  margin: 6px 0 0;
+  font-size: 11px;
+}
+
+/* -------------------------- submitted / status ------------------------ */
+.submitted-card {
+  max-width: 476px;
+}
+.submitted-badge {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  margin-bottom: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1e40ff, #4f7dff);
+  box-shadow: 0 8px 26px rgba(61, 107, 255, 0.5);
+}
+.status-timeline {
+  list-style: none;
+  margin: 6px 0 18px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.status-item {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12.5px;
+}
+.status-dot {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.8);
+}
+.status-item.done .status-dot {
+  background: #1fbf5f;
+  border-color: #1fbf5f;
+  color: #fff;
+}
+.status-item.current .status-dot {
+  background: #fff;
+  border-color: #fff;
+  color: #111;
+}
+.status-item.todo .status-label {
+  color: rgba(255, 255, 255, 0.7);
+}
+.status-note {
+  font-size: 9.5px;
+  color: rgba(255, 255, 255, 0.6);
+}
+.org-id-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(31, 191, 95, 0.6);
+  background: rgba(31, 191, 95, 0.1);
+}
+.org-id-label {
+  display: block;
+  font-size: 10.5px;
+  color: rgba(255, 255, 255, 0.65);
+}
+.org-id-value {
+  display: block;
+  margin-top: 2px;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+}
+.submitted-back {
+  height: 34px;
+}
+
+/* --------------------- organization sign-in cards --------------------- */
+.auth-card.auth-card-org {
+  background: linear-gradient(180deg, rgba(62, 58, 90, 0.72) 0%, rgba(58, 70, 160, 0.55) 100%);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+.auth-card-recover {
+  max-width: 372px;
+  background: linear-gradient(180deg, rgba(16, 16, 22, 0.92) 0%, rgba(30, 36, 90, 0.7) 100%) !important;
+}
+.auth-card-recover .security-note {
+  margin: 12px 0 10px;
+}
+.org-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  font-size: 11.5px;
+}
+
+/* Long values (OrganizationID) in the demo inbox */
+.org-auth-page .demo-inbox-code {
+  font-size: 20px;
+  letter-spacing: 1.5px;
+  overflow-wrap: anywhere;
+}
+
+/* ------------------------------ responsive ---------------------------- */
+@media (max-width: 560px) {
+  .wizard-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .org-type-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .stepper-label {
+    display: none;
+  }
+  .org-auth-logo .logo-word {
+    font-size: 42px;
+  }
+}

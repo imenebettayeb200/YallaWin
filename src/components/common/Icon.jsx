@@ -203,6 +203,36 @@ const PATHS = {
       <path d="M4 20h16" />
     </>
   ),
+  building: (
+    <>
+      <rect x="5" y="3" width="14" height="18" rx="2" />
+      <path d="M9 7h1" />
+      <path d="M14 7h1" />
+      <path d="M9 11h1" />
+      <path d="M14 11h1" />
+      <path d="M9 15h1" />
+      <path d="M14 15h1" />
+      <path d="M10 21v-3h4v3" />
+    </>
+  ),
+  file: (
+    <>
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z" />
+      <path d="M14 3v5h5" />
+    </>
+  ),
+  lock: (
+    <>
+      <rect x="5" y="11" width="14" height="10" rx="2" />
+      <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+    </>
+  ),
+  copy: (
+    <>
+      <rect x="9" y="9" width="12" height="12" rx="2" />
+      <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" />
+    </>
+  ),
   sparkle: (
     <>
       <path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z" />

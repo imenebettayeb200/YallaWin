@@ -132,6 +132,35 @@ Pages (in `src/pages/`) only assemble these components.
 | **AttendedItem** | Past event row with the user's review or a form to write one. | `event`, `review`, `onReview(event, rating, text)` | — |
 | **QuickReviewForm** | Stars + short text + Post. | `onSubmit(rating, text)` | `useState` rating, text |
 
+## 9. `components/org-auth/` — organization sign-up & sign-in (blue "FOR ORGANIZATIONS" screens)
+
+Flow: **Apply (3 steps) → Application under review → OrganizationID issued → Sign in with OrganizationID → 6-digit code → Dashboard**.
+
+| Component | What it does | Props | State / effects |
+|---|---|---|---|
+| **OrgAuthLayout** | Dark blue page with the glow and the "YallaWin FOR ORGANIZATIONS" logo. | `children`, `top` (e.g. the stepper), `wide` | — |
+| **Stepper** | "① Organization —— ② Documents —— ③ Review"; done = green check, current = white. | `steps`, `current` | — |
+| **WizardCard** | Dark rounded card with a big title and grey intro text (a `<form>`). | `title`, `intro`, `onSubmit` | — |
+| **WizardFooter** | "Cancel / Back" text button + white "Continue / Submit" pill. | `backLabel`, `onBack`, `nextLabel`, `nextDisabled` | — |
+| **OrgInfoStep** | Step 1 "Tell us about your organization": name, city, type, website, admin email, password, event types. | `info`, `errors`, `onChange(patch)`, `onCancel`, `onNext` | — |
+| **OrgTypeSelect** | 4 equal buttons: Company · University club · Association / NGO · Collective (from `ORG_TYPES`). | `options`, `value`, `onChange`, `error` | — |
+| **EventTypeChips** | Multi-select chips "What kind of events do you host?" (from `ORG_EVENT_TYPES`). | `options`, `value` (array), `onChange(array)`, `error` | — |
+| **DocumentsStep** | Step 2 "Upload your documents": one row per item of `ORG_DOCUMENTS` + security note. | `documents`, `eventTypes`, `errors`, `onSelect(doc, file)`, `onBack`, `onNext` | — |
+| **DocumentUploadRow** | One document: dashed row with "Upload", or green row with file name · size · "Replace". | `doc`, `file`, `required`, `error`, `onSelect(file)` | `useRef` hidden file input |
+| **SecurityNote** | Small grey bar with an icon ("Your documents are encrypted…"). | `icon`, `children` | — |
+| **ReviewStep** | Step 3 "Review and submit": summary boxes, terms checkbox, "Submit for verification". | `info`, `documents`, `accepted`, `onAccept`, `error`, `submitting`, `onEditStep(step)`, `onBack`, `onSubmit` | — |
+| **ReviewSection** | One grey summary box with "✎ Edit" and label/value rows. | `title`, `rows` [[label, value]], `onEdit` | — |
+| **StatusTimeline** | The 3 lines of "Application under review" (submitted · document check · approved). | `items` [{label, note, state}] | — |
+
+**Pages** (`src/pages/org-auth/`): `ApplyOrganization` (/register/organization), `ApplicationSubmitted`
+(/register/organization/submitted, updates every second with `useNow` until approved), `OrgLogin`
+(/login/organization, OrganizationID + password), `OrgForgotPassword` (/forgot-password/organization).
+`TwoStepVerification` shows the blue version automatically for organization accounts.
+
+**Logic**: `src/services/orgService.js` validates the application, creates the admin account + organization
+(status "pending"), simulates the trust-team review (`DEMO_REVIEW_SECONDS` in data.js) and issues the
+OrganizationID (e.g. `ORG-FOLLAMOUR-2041`). Only the file name and size of documents are stored.
+
 ---
 
 ## Custom hooks (`src/hooks/`)
@@ -148,3 +177,5 @@ Pages (in `src/pages/`) only assemble these components.
 | **useEventForm** | State and updaters of the create / edit event form. | `useState`, `useMemo` |
 | **useReviewStats** | Reviews, distribution, tags and per-event ratings. | `useMemo` |
 | **useHomeEvents** | Top picks, filtered events, cities and the user's tickets. | `useMemo` |
+| **useOrgApplication** | State of the 3-step organization application; saves a draft (without passwords) so a refresh keeps progress. | `useState` + `useEffect` (save draft) |
+| **useNow** | Current time, updated every second (live "under review" status). | `useState` + `useEffect` (interval with cleanup) |
